@@ -6,23 +6,27 @@ This microservice provides necessary REST APIs via HTTP and it's connected to [`
 
 This microservice requires its own set of environment variables, `.env` file is required, see [`.env.example`](./.env.example) for details
 
-### Working with `.proto` file
+### Working with `.proto` file (MacOS)
 
 Both microservices should use the same [`index.proto`](./grpc/index.proto) file
 
-If any change was made to [`index.proto`](./grpc/index.proto) file, both [`index_grpc.pb.go`](./grpc/index_grpc.pb.go) and [`index.pb.go`](./grpc/index.pb.go) files should be regenerated to reflect all of the changes made to `index.proto` (these files shuold not be changed manually)
+If any change was made to [`index.proto`](./grpc/index.proto) file, [`index_grpc.pb.go`](./grpc/index_grpc.pb.go) and [`index.pb.go`](./grpc/index.pb.go) files should be regenerated to reflect all of the changes made to `index.proto` (these files shuold not be changed manually)
 
-These files can be regenerated with the [`proto.sh`](./proto.sh) script:
+Install all of the necessary dependencies for `.proto` compilation:
+
+```shell script
+# Protocol Buffer compiler
+brew install protobuf
+
+# Golang wrappers
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+```
+
+Compile [`index.proto`](./grpc/index.proto) file using [`proto.sh`](./proto.sh) script:
 
 ```shell script
 bash proto.sh
-```
-
-Additional dependencies are required:
-
-```shell script
-go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 ```
 
 ### Launch

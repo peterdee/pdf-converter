@@ -20,7 +20,7 @@ cd ./pdf-converter
 gvm use 1.22.0
 ```
 
-Additional deployment instructions are available in [api-interface/README.md](./api-interface/README.md) and [converter/README.md](./converter/README.md)
+Additional deployment and launching instructions are available in [api-interface/README.md](./api-interface/README.md) and [converter/README.md](./converter/README.md)
 
 ### License
 
