@@ -8,19 +8,14 @@ This microservice requires its own set of environment variables, `.env` file is 
 
 ### Deploy (MacOS)
 
-This microservice uses [ImageMagick](https://imagemagick.org/script/download.php) and [Ghostscript](https://ghostscript.com/docs/9.54.0/Install.htm). Both should be installed into the system:
+This microservice uses [ImageMagick](https://imagemagick.org/script/download.php) and [Ghostscript](https://ghostscript.com/docs/9.54.0/Install.htm):
 
 ```shell script
 brew install ghostscript
-
+brew install pkg-config
 brew install imagemagick
 ```
 
-ImageMagick also requires `pkg-config` to be installed:
-
-```shell script
-brew install pkg-config
-```
 ### Working with `.proto` file (MacOS)
 
 Both microservices should use the same [`index.proto`](./grpc/index.proto) file

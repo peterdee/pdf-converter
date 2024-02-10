@@ -12,7 +12,7 @@ Both microservices should use the same [`index.proto`](./grpc/index.proto) file
 
 If any change was made to [`index.proto`](./grpc/index.proto) file, [`index_grpc.pb.go`](./grpc/index_grpc.pb.go) and [`index.pb.go`](./grpc/index.pb.go) files should be regenerated to reflect all of the changes made to `index.proto` (these files shuold not be changed manually)
 
-Install all of the necessary dependencies for `.proto` compilation:
+Install all of the necessary dependencies for `.proto` file compilation:
 
 ```shell script
 # Protocol Buffer compiler
@@ -49,4 +49,4 @@ HTTP server will be available at http://localhost:8000
 
 ### Available APIs
 
-// TODO: list APIs or create a separate file
+Available APIs are listed in [APIS.md](./APIS.md)
