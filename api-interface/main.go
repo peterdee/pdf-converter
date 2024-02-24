@@ -1,7 +1,6 @@
 package main
 
 import (
-	"api-interface/constants"
 	"fmt"
 	"log"
 	"os"
@@ -10,6 +9,9 @@ import (
 	"github.com/gofiber/fiber/v3/middleware/favicon"
 	"github.com/gofiber/fiber/v3/middleware/logger"
 	"github.com/joho/godotenv"
+
+	"api-interface/constants"
+	"api-interface/utilities"
 )
 
 func main() {
@@ -18,7 +20,7 @@ func main() {
 	}
 
 	app := fiber.New(fiber.Config{
-		ErrorHandler: nil,
+		ErrorHandler: utilities.ErrorHandler,
 	})
 
 	app.Use(favicon.New(favicon.Config{
@@ -26,8 +28,8 @@ func main() {
 	}))
 	app.Use(logger.New())
 
-	app.Get("/", func(c fiber.Ctx) error {
-		return c.SendString("response")
+	app.Get("/", func(context fiber.Ctx) error {
+		return utilities.Response(utilities.ResponseOptions{Context: context})
 	})
 
 	port := os.Getenv("PORT")
