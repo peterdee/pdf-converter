@@ -10,6 +10,8 @@ import (
 	"github.com/gofiber/fiber/v3/middleware/logger"
 	"github.com/joho/godotenv"
 
+	"api-interface/apis/index"
+	"api-interface/apis/split"
 	"api-interface/constants"
 	"api-interface/utilities"
 )
@@ -28,9 +30,8 @@ func main() {
 	}))
 	app.Use(logger.New())
 
-	app.Get("/", func(context fiber.Ctx) error {
-		return utilities.Response(utilities.ResponseOptions{Context: context})
-	})
+	index.RegisterControllers(app)
+	split.RegisterControllers(app)
 
 	port := os.Getenv("PORT")
 	if port == "" {
