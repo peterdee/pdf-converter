@@ -13,6 +13,7 @@ import (
 	"api-interface/apis/index"
 	"api-interface/apis/split"
 	"api-interface/constants"
+	grpc_client "api-interface/grpc"
 	"api-interface/utilities"
 )
 
@@ -29,6 +30,8 @@ func main() {
 		File: "./assets/favicon.ico",
 	}))
 	app.Use(logger.New())
+
+	grpc_client.CreateRPCConnection()
 
 	index.RegisterControllers(app)
 	split.RegisterControllers(app)

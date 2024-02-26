@@ -1,10 +1,14 @@
 package constants
 
 type ErrorMessages struct {
-	CouldNotLoadEnvFile string
+	CouldNotConnectToRPC       string
+	CouldNotLoadEnvFile        string
+	CouldNotLoadRPCCredentials string
 }
 
 type ResponseMessages struct {
 	InternalServerError string
+	InvalidFile         string
+	MissingFile         string
 	Ok                  string
 }
