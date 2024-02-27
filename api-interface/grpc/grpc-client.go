@@ -2,7 +2,7 @@ package grpc_client
 
 import (
 	context "context"
-	"fmt"
+	"encoding/hex"
 	"log"
 	"os"
 	"time"
@@ -32,20 +32,22 @@ func CreateRPCConnection() {
 			connectionError,
 		)
 	}
-	defer connection.Close()
 
 	Connection = connection
 
 	Client = NewSplitterClient(Connection)
 }
 
-func SplitFile(bytes []byte, filename string) {
+func SplitFile(bytes []byte, filename string) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	r, err := Client.SplitData(ctx, &SplitDataRequest{Bytes: string(bytes), Filename: filename})
-	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+	response, splitDataError := Client.SplitData(
+		ctx,
+		&SplitDataRequest{Bytes: hex.EncodeToString(bytes), Filename: filename},
+	)
+	if splitDataError != nil {
+		return "", splitDataError
 	}
-	fmt.Println(r)
+	return response.Id, nil
 }

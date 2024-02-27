@@ -42,10 +42,15 @@ func SplitController(context fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError)
 	}
 
-	// TODO: finalize
-	grpc_client.SplitFile(bytes, file.Filename)
+	queueId, queueError := grpc_client.SplitFile(bytes, file.Filename)
+	if queueError != nil {
+		return fiber.NewError(fiber.StatusInternalServerError)
+	}
 
 	return utilities.Response(utilities.ResponseOptions{
 		Context: context,
+		Data: fiber.Map{
+			"queueId": queueId,
+		},
 	})
 }

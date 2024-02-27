@@ -11,7 +11,9 @@ func ErrorHandler(context fiber.Ctx, err error) error {
 	status := fiber.StatusInternalServerError
 
 	if e, ok := err.(*fiber.Error); ok {
-		info = e.Message
+		if e.Message != "Internal Server Error" {
+			info = e.Message
+		}
 		status = e.Code
 	}
 
