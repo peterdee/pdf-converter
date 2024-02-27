@@ -1,6 +1,7 @@
 # Directories
 **/.idea/
 **/tmp/
+splitter/processing
 
 # Files
 **/.env

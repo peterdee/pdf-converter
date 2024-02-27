@@ -14,7 +14,7 @@ type server struct {
 }
 
 func (s *server) SplitData(ctx context.Context, in *SplitDataRequest) (*SplitDataResponse, error) {
-	queueId, queueError := handlers.SplitPDF(in.Bytes, in.Filename)
+	queueId, queueError := handlers.QueueFile(in.Bytes, in.Filename)
 	if queueError != nil {
 		return nil, queueError
 	}
