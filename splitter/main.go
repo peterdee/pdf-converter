@@ -20,9 +20,7 @@ func main() {
 	}
 
 	database.CreateConnection()
-
 	utilities.LaunchCRON()
-	utilities.Scheduler.Start()
 
 	if mkdirError := os.Mkdir("./processing", 0777); mkdirError != nil {
 		if mkdirError.Error() != "mkdir ./processing: file exists" {
@@ -30,7 +28,7 @@ func main() {
 		}
 	}
 
-	port := os.Getenv("PORT")
+	port := os.Getenv(constants.ENV_NAMES.Port)
 	if port == "" {
 		port = constants.PORT
 	}

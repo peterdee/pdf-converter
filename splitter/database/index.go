@@ -4,11 +4,14 @@ import (
 	"context"
 	"log"
 	"os"
+	"splitter/constants"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
+
+const QueueCollection string = "Queue"
 
 var Client *mongo.Client
 
@@ -20,16 +23,26 @@ func CreateConnection() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	connectionString := os.Getenv("MONGO_CONNECTION_STRING")
+	connectionString := os.Getenv(constants.ENV_NAMES.MongoConnectionString)
 	if connectionString == "" {
-		log.Fatalf("Could not load MongoDB connection string")
+		log.Fatal(constants.ERROR_MESSAGES.CouldNotLoadMongoConnectionString)
 	}
-	client, connectionError := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
+	databaseName := os.Getenv(constants.ENV_NAMES.MongoDatabaseName)
+	if databaseName == "" {
+		databaseName = constants.DATABASE_NAME
+	}
+	client, connectionError := mongo.Connect(ctx, options.Client().ApplyURI(connectionString))
 	if connectionError != nil {
-		log.Fatalf("Could not connect to MongoDB: %v", connectionError)
+		log.Fatalf(
+			"%s: %v",
+			constants.ERROR_MESSAGES.CouldNotConnectToMongo,
+			connectionError,
+		)
 	}
 
+	log.Println("MongoDB connected")
+
 	Client = client
-	Database = Client.Database("splitqueue")
-	Queue = Database.Collection("queue")
+	Database = Client.Database(databaseName)
+	Queue = Database.Collection(QueueCollection)
 }

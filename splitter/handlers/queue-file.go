@@ -11,6 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
+	"splitter/constants"
 	"splitter/database"
 	"splitter/utilities"
 )
@@ -40,16 +41,14 @@ func QueueFile(encoded string, filename string) (string, error) {
 	now := gohelpers.MakeTimestamp()
 	result, insertionError := database.Queue.InsertOne(ctx, bson.D{
 		{Key: "createdAt", Value: now},
-		{Key: "isProcessed", Value: false},
 		{Key: "originalFileName", Value: filename},
+		{Key: "status", Value: constants.QUEUE_STATUSES.Queued},
 		{Key: "uid", Value: hash},
 		{Key: "updatedAt", Value: now},
 	})
 	if insertionError != nil {
 		return "", insertionError
 	}
-
-	// imagick.ConvertImageCommand([]string{"-density", "150", "/presentation.pdf", "-quality", "90", "test.jpg"})
 
 	return result.InsertedID.(primitive.ObjectID).Hex(), nil
 }
