@@ -1,4 +1,4 @@
-package grpc_client
+package grpc_generated
 
 import (
 	context "context"
@@ -13,7 +13,7 @@ import (
 	"api-interface/constants"
 )
 
-var Client SplitterClient
+var Client ConverterClient
 var Connection *grpc.ClientConn
 
 func CreateRPCConnection() {
@@ -35,19 +35,19 @@ func CreateRPCConnection() {
 
 	Connection = connection
 
-	Client = NewSplitterClient(Connection)
+	Client = NewConverterClient(Connection)
 }
 
-func SplitFile(bytes []byte, filename string) (string, error) {
+func QueueFile(bytes []byte, filename string) (*QueueFileResponse, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	response, splitDataError := Client.SplitData(
+	response, splitDataError := Client.QueueFile(
 		ctx,
-		&SplitDataRequest{Bytes: hex.EncodeToString(bytes), Filename: filename},
+		&QueueFileRequest{Bytes: hex.EncodeToString(bytes), Filename: filename},
 	)
 	if splitDataError != nil {
-		return "", splitDataError
+		return nil, splitDataError
 	}
-	return response.Id, nil
+	return response, nil
 }

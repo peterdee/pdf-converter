@@ -1,7 +1,6 @@
 package split
 
 import (
-	"fmt"
 	"io"
 	"strings"
 
@@ -43,16 +42,18 @@ func SplitController(context fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError)
 	}
 
-	queueId, queueError := grpc_client.SplitFile(bytes, file.Filename)
+	response, queueError := grpc_client.QueueFile(bytes, file.Filename)
 	if queueError != nil {
-		fmt.Println(queueError)
 		return fiber.NewError(fiber.StatusInternalServerError)
 	}
 
 	return utilities.Response(utilities.ResponseOptions{
 		Context: context,
 		Data: fiber.Map{
-			"queueId": queueId,
+			"fileName":   &response.Filename,
+			"queueCount": &response.Count,
+			"queueId":    &response.Uid,
+			"status":     &response.Status,
 		},
 	})
 }

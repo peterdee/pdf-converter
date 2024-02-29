@@ -13,8 +13,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/writeconcern"
 	"gopkg.in/gographics/imagick.v3/imagick"
 
-	"splitter/constants"
-	"splitter/database"
+	"converter/constants"
+	"converter/database"
 )
 
 var Scheduler *cron.Cron

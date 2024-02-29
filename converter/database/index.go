@@ -4,11 +4,12 @@ import (
 	"context"
 	"log"
 	"os"
-	"splitter/constants"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+
+	"converter/constants"
 )
 
 const QueueCollection string = "Queue"

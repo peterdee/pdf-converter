@@ -1,7 +1,9 @@
 # Directories
 **/.idea/
 **/tmp/
-splitter/processing
+converter/processing
 
 # Files
 **/.env
+**/*.jpg
+**/*.pdf

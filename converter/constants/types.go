@@ -7,6 +7,7 @@ type EnvNames struct {
 }
 
 type ErrorMessages struct {
+	FailedToServeRPCServer            string
 	CouldNotConnectToMongo            string
 	CouldNotConnectToRPC              string
 	CouldNotLoadEnvFile               string

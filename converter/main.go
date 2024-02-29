@@ -8,10 +8,10 @@ import (
 
 	"github.com/joho/godotenv"
 
-	"splitter/constants"
-	"splitter/database"
-	grpc_client "splitter/grpc"
-	"splitter/utilities"
+	"converter/constants"
+	"converter/database"
+	grpc_generated "converter/grpc"
+	"converter/utilities"
 )
 
 func main() {
@@ -36,5 +36,5 @@ func main() {
 	if tcpError != nil {
 		log.Fatal(tcpError)
 	}
-	grpc_client.CreateServer(tcpServer)
+	grpc_generated.CreateServer(tcpServer)
 }
