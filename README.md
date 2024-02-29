@@ -10,10 +10,26 @@ brew install ghostscript
 brew install imagemagick
 ```
 
+ImageMagick also requires `pkg-config` to be installed:
+
+```shell script
+brew install pkg-config
+```
+
 ### Launch
 
 Compile `proto`:
 
 ```shell script
 bash proto.sh
+```
+
+#### `splitter` microservice
+
+```shell script
+# Without AIR
+export CGO_CFLAGS_ALLOW='-Xpreprocessor' && go run ./
+
+# With AIR
+export CGO_CFLAGS_ALLOW='-Xpreprocessor' && air
 ```

@@ -12,6 +12,7 @@ type ErrorMessages struct {
 	CouldNotLoadEnvFile               string
 	CouldNotLoadMongoConnectionString string
 	CouldNotLoadRPCCredentials        string
+	MongoTransactionError             string
 }
 
 type QueueStatuses struct {

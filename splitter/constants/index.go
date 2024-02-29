@@ -14,6 +14,7 @@ var ERROR_MESSAGES = ErrorMessages{
 	CouldNotLoadEnvFile:               "Could not load .env file",
 	CouldNotLoadMongoConnectionString: "Could not load MongoDB connection string",
 	CouldNotLoadRPCCredentials:        "Could not load RPC credentials",
+	MongoTransactionError:             "Mongo transaction error",
 }
 
 const PORT = "50051"

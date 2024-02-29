@@ -9,6 +9,9 @@ import (
 	"github.com/robfig/cron/v3"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/writeconcern"
+	"gopkg.in/gographics/imagick.v3/imagick"
 
 	"splitter/constants"
 	"splitter/database"
@@ -40,22 +43,43 @@ func schedulerTick() {
 				log.Fatal(queryError)
 			}
 			if queryError == mongo.ErrNoDocuments {
-				// TODO: at this point processing should be started
-				fmt.Println("start processing")
-				// imagick.ConvertImageCommand([]string{
-				// 	"-density",s
-				// 	"150",
-				// 	"/presentation.pdf",
-				// 	"-quality",
-				// 	"90",
-				// 	"test.jpg",
-				// })
+				var queueItem database.QueueEntry
+				getDocumentError := database.Queue.FindOne(
+					sctx,
+					bson.D{},
+					options.FindOne().SetSort(bson.D{{Key: "createdAt", Value: 1}}),
+				).Decode(&queueItem)
+				if getDocumentError != nil && getDocumentError != mongo.ErrNoDocuments {
+					log.Fatal(getDocumentError)
+				}
+				if getDocumentError == mongo.ErrNoDocuments {
+					return new(interface{}), nil
+				}
+
+				filePath := fmt.Sprintf("./processing/%s/%s.pdf", queueItem.UID, queueItem.UID)
+				resultMask := fmt.Sprintf("./processing/%s/p.jpg", queueItem.UID)
+				result, convertError := imagick.ConvertImageCommand([]string{
+					"-density 150",
+					filePath,
+					resultMask,
+				})
+				fmt.Println(result, convertError)
+
+				zipError := CreateZipArchive(queueItem.UID)
+				if zipError != nil {
+					log.Fatal(zipError)
+				}
 			}
 			return new(interface{}), nil
 		},
+		options.Transaction().SetWriteConcern(writeconcern.Majority()),
 	)
 	if transactionError != nil {
-		log.Fatal(transactionError)
+		log.Fatalf(
+			"%s: %v",
+			constants.ERROR_MESSAGES.MongoTransactionError,
+			transactionError,
+		)
 	}
 	// Scheduler.Stop()
 	// Scheduler.Start()
