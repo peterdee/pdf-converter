@@ -10,8 +10,9 @@ import (
 	"github.com/gofiber/fiber/v3/middleware/logger"
 	"github.com/joho/godotenv"
 
+	"api-interface/apis/download"
 	"api-interface/apis/index"
-	"api-interface/apis/split"
+	"api-interface/apis/queue"
 	"api-interface/constants"
 	grpc_client "api-interface/grpc"
 	"api-interface/utilities"
@@ -33,10 +34,11 @@ func main() {
 
 	grpc_client.CreateRPCConnection()
 
+	download.RegisterControllers(app)
 	index.RegisterControllers(app)
-	split.RegisterControllers(app)
+	queue.RegisterControllers(app)
 
-	port := os.Getenv("PORT")
+	port := os.Getenv(constants.ENV_NAMES.Port)
 	if port == "" {
 		port = constants.PORT
 	}

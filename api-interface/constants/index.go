@@ -1,5 +1,10 @@
 package constants
 
+var ENV_NAMES = EnvNames{
+	GRPCAddress: "GRPC_ADDRESS",
+	Port:        "PORT",
+}
+
 var ERROR_MESSAGES = ErrorMessages{
 	CouldNotConnectToRPC:       "Could not connect to RPC",
 	CouldNotLoadEnvFile:        "Could not load .env file",
@@ -10,6 +15,7 @@ var RESPONSE_MESSAGES = ResponseMessages{
 	InternalServerError: "INTERNAL_SERVER_ERROR",
 	InvalidFile:         "INVALID_FILE",
 	MissingFile:         "MISSING_FILE",
+	MissingUID:          "MISSING_UID",
 	Ok:                  "OK",
 }
 

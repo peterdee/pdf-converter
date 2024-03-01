@@ -1,4 +1,4 @@
-package split
+package queue
 
 import (
 	"io"
@@ -11,7 +11,7 @@ import (
 	"api-interface/utilities"
 )
 
-func SplitController(context fiber.Ctx) error {
+func QueueFileController(context fiber.Ctx) error {
 	file, fileError := context.FormFile("pdf")
 	if fileError != nil {
 		if fileError.Error() == "there is no uploaded file associated with the given key" &&
@@ -52,8 +52,8 @@ func SplitController(context fiber.Ctx) error {
 		Data: fiber.Map{
 			"fileName":   &response.Filename,
 			"queueCount": &response.Count,
-			"queueId":    &response.Uid,
 			"status":     &response.Status,
+			"uid":        &response.Uid,
 		},
 	})
 }

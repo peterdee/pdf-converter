@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ConverterClient interface {
 	DownloadArchive(ctx context.Context, in *DownloadArchiveRequest, opts ...grpc.CallOption) (*DownloadArchiveResponse, error)
+	GetInfo(ctx context.Context, in *GetInfoRequest, opts ...grpc.CallOption) (*GetInfoResponse, error)
 	QueueFile(ctx context.Context, in *QueueFileRequest, opts ...grpc.CallOption) (*QueueFileResponse, error)
 }
 
@@ -43,6 +44,15 @@ func (c *converterClient) DownloadArchive(ctx context.Context, in *DownloadArchi
 	return out, nil
 }
 
+func (c *converterClient) GetInfo(ctx context.Context, in *GetInfoRequest, opts ...grpc.CallOption) (*GetInfoResponse, error) {
+	out := new(GetInfoResponse)
+	err := c.cc.Invoke(ctx, "/api.Converter/GetInfo", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *converterClient) QueueFile(ctx context.Context, in *QueueFileRequest, opts ...grpc.CallOption) (*QueueFileResponse, error) {
 	out := new(QueueFileResponse)
 	err := c.cc.Invoke(ctx, "/api.Converter/QueueFile", in, out, opts...)
@@ -57,6 +67,7 @@ func (c *converterClient) QueueFile(ctx context.Context, in *QueueFileRequest, o
 // for forward compatibility
 type ConverterServer interface {
 	DownloadArchive(context.Context, *DownloadArchiveRequest) (*DownloadArchiveResponse, error)
+	GetInfo(context.Context, *GetInfoRequest) (*GetInfoResponse, error)
 	QueueFile(context.Context, *QueueFileRequest) (*QueueFileResponse, error)
 	mustEmbedUnimplementedConverterServer()
 }
@@ -67,6 +78,9 @@ type UnimplementedConverterServer struct {
 
 func (UnimplementedConverterServer) DownloadArchive(context.Context, *DownloadArchiveRequest) (*DownloadArchiveResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DownloadArchive not implemented")
+}
+func (UnimplementedConverterServer) GetInfo(context.Context, *GetInfoRequest) (*GetInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetInfo not implemented")
 }
 func (UnimplementedConverterServer) QueueFile(context.Context, *QueueFileRequest) (*QueueFileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method QueueFile not implemented")
@@ -102,6 +116,24 @@ func _Converter_DownloadArchive_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Converter_GetInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ConverterServer).GetInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.Converter/GetInfo",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ConverterServer).GetInfo(ctx, req.(*GetInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Converter_QueueFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(QueueFileRequest)
 	if err := dec(in); err != nil {
@@ -130,6 +162,10 @@ var Converter_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DownloadArchive",
 			Handler:    _Converter_DownloadArchive_Handler,
+		},
+		{
+			MethodName: "GetInfo",
+			Handler:    _Converter_GetInfo_Handler,
 		},
 		{
 			MethodName: "QueueFile",
