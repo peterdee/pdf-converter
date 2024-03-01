@@ -6,6 +6,7 @@ option go_package = "grpc.generated";
 
 service Converter {
   rpc DownloadArchive (DownloadArchiveRequest) returns (DownloadArchiveResponse) {}
+  rpc GetInfo (GetInfoRequest) returns (GetInfoResponse) {}
   rpc QueueFile (QueueFileRequest) returns (QueueFileResponse) {}
 }
 
@@ -17,6 +18,17 @@ message DownloadArchiveResponse {
   string bytes = 1;
   string filename = 2;
   int64 processed = 3;
+  string uid = 4;
+}
+
+message GetInfoRequest {
+  string uid = 1;
+}
+
+message GetInfoResponse {
+  int64 count = 1;
+  string filename = 2;
+  string status = 3;
   string uid = 4;
 }
 

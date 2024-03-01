@@ -19,7 +19,7 @@ func CreateZipArchive(uid string) error {
 		return nil
 	}
 
-	archive, fileError := os.Create(fmt.Sprintf("%s/archive.zip", dirPath))
+	archive, fileError := os.Create(fmt.Sprintf("%s/%s.zip", dirPath, uid))
 	if fileError != nil {
 		log.Fatal(fileError)
 	}
@@ -29,6 +29,8 @@ func CreateZipArchive(uid string) error {
 	for _, entry := range entries {
 		partials := strings.Split(entry.Name(), ".")
 		extention := partials[len(partials)-1]
+
+		// TODO: improve
 		if !entry.IsDir() && strings.ToLower(extention) == "jpg" {
 			file, fileError := os.Open(fmt.Sprintf("%s/%s", dirPath, entry.Name()))
 			if fileError == nil {

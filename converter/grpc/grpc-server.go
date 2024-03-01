@@ -15,7 +15,10 @@ type server struct {
 	UnimplementedConverterServer
 }
 
-func (s *server) DownloadArchive(ctx context.Context, in *DownloadArchiveRequest) (*DownloadArchiveResponse, error) {
+func (s *server) DownloadArchive(
+	ctx context.Context,
+	in *DownloadArchiveRequest,
+) (*DownloadArchiveResponse, error) {
 	result, downloadError := handlers.DownloadArchive(in.Uid)
 	if downloadError != nil {
 		return nil, downloadError
@@ -29,7 +32,27 @@ func (s *server) DownloadArchive(ctx context.Context, in *DownloadArchiveRequest
 	return &response, nil
 }
 
-func (s *server) QueueFile(ctx context.Context, in *QueueFileRequest) (*QueueFileResponse, error) {
+func (s *server) GetInfo(
+	ctx context.Context,
+	in *GetInfoRequest,
+) (*GetInfoResponse, error) {
+	getInfoResult, getInfoError := handlers.GetInfo(in.Uid)
+	if getInfoError != nil {
+		return nil, getInfoError
+	}
+	response := GetInfoResponse{
+		Count:    getInfoResult.QueuedItems,
+		Filename: getInfoResult.Filename,
+		Status:   getInfoResult.Status,
+		Uid:      getInfoResult.UID,
+	}
+	return &response, nil
+}
+
+func (s *server) QueueFile(
+	ctx context.Context,
+	in *QueueFileRequest,
+) (*QueueFileResponse, error) {
 	queueFileResult, queueError := handlers.QueueFile(in.Bytes, in.Filename)
 	if queueError != nil {
 		return nil, queueError

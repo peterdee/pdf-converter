@@ -7,6 +7,13 @@ type DownloadArchiveResult struct {
 	UID         string
 }
 
+type GetInfoResult struct {
+	Filename    string
+	QueuedItems int64
+	Status      string
+	UID         string
+}
+
 type QueueFileResult struct {
 	Filename    string
 	QueuedItems int64
