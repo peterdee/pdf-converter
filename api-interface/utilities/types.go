@@ -4,7 +4,7 @@ import "github.com/gofiber/fiber/v3"
 
 type ResponseOptions struct {
 	Context fiber.Ctx
-	Data    interface{}
+	Data    fiber.Map
 	Info    string
 	Status  int
 }

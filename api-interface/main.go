@@ -23,6 +23,8 @@ func main() {
 		log.Fatal(constants.ERROR_MESSAGES.CouldNotLoadEnvFile)
 	}
 
+	grpc_client.CreateRPCConnection()
+
 	app := fiber.New(fiber.Config{
 		ErrorHandler: utilities.ErrorHandler,
 	})
@@ -31,8 +33,6 @@ func main() {
 		File: "./assets/favicon.ico",
 	}))
 	app.Use(logger.New())
-
-	grpc_client.CreateRPCConnection()
 
 	download.RegisterControllers(app)
 	index.RegisterControllers(app)

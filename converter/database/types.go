@@ -1,10 +1,12 @@
 package database
 
+import "go.mongodb.org/mongo-driver/bson/primitive"
+
 type QueueEntry struct {
-	CreatedAt        int64  `json:"createdAt"`
-	Id               string `json:"_id"`
-	OriginalFileName string `json:"originalFileName"`
-	Status           string `json:"status"`
-	UID              string `json:"uid"`
-	UpdatedAt        int64  `json:"updatedAt"`
+	CreatedAt        int64              `json:"createdAt"`
+	ID               primitive.ObjectID `bson:"_id" json:"id,omitempty"`
+	OriginalFileName string             `json:"originalFileName"`
+	Status           string             `json:"status"`
+	UID              string             `json:"uid"`
+	UpdatedAt        int64              `json:"updatedAt"`
 }

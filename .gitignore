@@ -4,6 +4,7 @@
 converter/processing
 
 # Files
+**/.DS_Store
 **/.env
 **/*.jpg
 **/*.pdf

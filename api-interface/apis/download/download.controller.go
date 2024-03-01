@@ -25,12 +25,12 @@ func DownloadController(context fiber.Ctx) error {
 	// TODO: should download archive
 
 	return utilities.Response(utilities.ResponseOptions{
+		Context: context,
 		Data: fiber.Map{
 			"bytes":       &response.Bytes,
 			"filename":    &response.Filename,
 			"processedAt": &response.Processed,
 			"uid":         &response.Uid,
 		},
-		Context: context,
 	})
 }
