@@ -1,35 +1,27 @@
-## pdf-splitting
+## pdf-converter
+
+Convert PDF files into JPEG images using Golang
+
+This repository contains 2 microservices: [`api-interface`](./api-interface) and [`converter`](./converter)
+
+`api-interface` provides REST APIs via HTTP to queue PDF conversion and get the resulting archive
+
+`converter` converts queued PDF files and returns ZIP-archive after PDF has been converted
+
+Microservices are connected via gRPC, conversion queue is implemented using MongoDB, PDF files are converted into JPEG using ImageMagick
 
 ### Deploy
 
-[`splitter`](./splitter/) microservice uses [ImageMagick](https://imagemagick.org/script/download.php) and [Ghostscript](https://ghostscript.com/docs/9.54.0/Install.htm). Both should be installed into the system (if not using Docker):
+Clone the repository:
 
 ```shell script
-brew install ghostscript
-
-brew install imagemagick
+git clone https://github.com/peterdee/pdf-converter
+cd ./pdf-converter
+gvm use 1.22.0
 ```
 
-ImageMagick also requires `pkg-config` to be installed:
+Additional deployment instructions are available in [api-interface/README.md](./api-interface/README.md) and [converter/README.md](./converter/README.md)
 
-```shell script
-brew install pkg-config
-```
+### License
 
-### Launch
-
-Compile `proto`:
-
-```shell script
-bash proto.sh
-```
-
-#### `splitter` microservice
-
-```shell script
-# Without AIR
-export CGO_CFLAGS_ALLOW='-Xpreprocessor' && go run ./
-
-# With AIR
-export CGO_CFLAGS_ALLOW='-Xpreprocessor' && air
-```
+[MIT](./LICENSE.md)

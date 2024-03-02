@@ -8,6 +8,8 @@ This microservice requires its own set of environment variables, `.env` file is 
 
 ### Working with `.proto` file
 
+Both microservices should use the same [`index.proto`](./grpc/index.proto) file
+
 If any change was made to [`index.proto`](./grpc/index.proto) file, both [`index_grpc.pb.go`](./grpc/index_grpc.pb.go) and [`index.pb.go`](./grpc/index.pb.go) files should be regenerated to reflect all of the changes made to `index.proto` (these files shuold not be changed manually)
 
 These files can be regenerated with the [`proto.sh`](./proto.sh) script:
