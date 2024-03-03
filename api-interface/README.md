@@ -18,7 +18,12 @@ These files can be regenerated with the [`proto.sh`](./proto.sh) script:
 bash proto.sh
 ```
 
-// TODO: dependencies
+Additional dependencies are required:
+
+```shell script
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+```
 
 ### Launch
 
