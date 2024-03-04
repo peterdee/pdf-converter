@@ -61,7 +61,7 @@ func (s *server) QueueFile(
 		Count:    queueFileResult.QueuedItems,
 		Filename: queueFileResult.Filename,
 		Status:   queueFileResult.Status,
-		Uid:      queueFileResult.QueueId,
+		Uid:      queueFileResult.UID,
 	}
 	return &response, nil
 }

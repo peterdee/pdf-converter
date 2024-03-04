@@ -17,6 +17,6 @@ type GetInfoResult struct {
 type QueueFileResult struct {
 	Filename    string
 	QueuedItems int64
-	QueueId     string
 	Status      string
+	UID         string
 }

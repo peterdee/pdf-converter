@@ -9,7 +9,6 @@ import (
 
 	"github.com/julyskies/gohelpers"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"converter/constants"
 	"converter/database"
@@ -44,7 +43,7 @@ func QueueFile(encoded string, filename string) (QueueFileResult, error) {
 	}
 
 	now := gohelpers.MakeTimestamp()
-	result, insertionError := database.Queue.InsertOne(ctx, bson.D{
+	_, insertionError := database.Queue.InsertOne(ctx, bson.D{
 		{Key: "createdAt", Value: now},
 		{Key: "originalFileName", Value: filename},
 		{Key: "status", Value: constants.QUEUE_STATUSES.Queued},
@@ -57,9 +56,9 @@ func QueueFile(encoded string, filename string) (QueueFileResult, error) {
 
 	var queueResult = QueueFileResult{
 		Filename:    filename,
-		QueueId:     result.InsertedID.(primitive.ObjectID).Hex(),
 		QueuedItems: count,
 		Status:      constants.QUEUE_STATUSES.Queued,
+		UID:         hash,
 	}
 	return queueResult, nil
 }
