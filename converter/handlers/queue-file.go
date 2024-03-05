@@ -15,7 +15,7 @@ import (
 	"converter/utilities"
 )
 
-func QueueFile(encoded string, filename string) (QueueFileResult, error) {
+func QueueFile(encoded string, filename string) (*QueueFileResult, error) {
 	hash := utilities.CreateMD5Hash(fmt.Sprintf(
 		"%s:%s:%d",
 		encoded,
@@ -25,22 +25,17 @@ func QueueFile(encoded string, filename string) (QueueFileResult, error) {
 	dirPath := fmt.Sprintf("./processing/%s", hash)
 	mkdirError := os.Mkdir(dirPath, 0777)
 	if mkdirError != nil {
-		return QueueFileResult{}, mkdirError
+		return nil, mkdirError
 	}
 
 	bytes, decodeError := hex.DecodeString(encoded)
 	if decodeError != nil {
-		return QueueFileResult{}, decodeError
+		return nil, decodeError
 	}
 	os.WriteFile(fmt.Sprintf("%s/%s.pdf", dirPath, hash), bytes, 0777)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-
-	count, countError := database.Queue.EstimatedDocumentCount(ctx)
-	if countError != nil {
-		return QueueFileResult{}, countError
-	}
 
 	now := gohelpers.MakeTimestamp()
 	_, insertionError := database.Queue.InsertOne(ctx, bson.D{
@@ -51,10 +46,20 @@ func QueueFile(encoded string, filename string) (QueueFileResult, error) {
 		{Key: "updatedAt", Value: now},
 	})
 	if insertionError != nil {
-		return QueueFileResult{}, insertionError
+		return nil, insertionError
 	}
 
-	var queueResult = QueueFileResult{
+	count, countError := database.Queue.CountDocuments(
+		ctx,
+		bson.D{
+			{Key: "status", Value: constants.QUEUE_STATUSES.Queued},
+		},
+	)
+	if countError != nil {
+		return nil, countError
+	}
+
+	var queueResult = &QueueFileResult{
 		Filename:    filename,
 		QueuedItems: count,
 		Status:      constants.QUEUE_STATUSES.Queued,

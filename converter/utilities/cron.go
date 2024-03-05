@@ -8,6 +8,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/julyskies/gohelpers"
 	"github.com/robfig/cron/v3"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -24,6 +25,8 @@ func schedulerTick() {
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
+	fmt.Println("tick")
+
 	var inProgress database.QueueEntry
 	queryError := database.Queue.FindOne(
 		ctx,
@@ -38,10 +41,14 @@ func schedulerTick() {
 		return
 	}
 
+	fmt.Println("not in progress")
+
 	var queueItem database.QueueEntry
 	queryError = database.Queue.FindOne(
 		ctx,
-		bson.D{},
+		bson.D{
+			{Key: "status", Value: constants.QUEUE_STATUSES.Queued},
+		},
 		options.FindOne().SetSort(bson.D{{Key: "createdAt", Value: 1}}),
 	).Decode(&queueItem)
 	if queryError != nil && queryError != mongo.ErrNoDocuments {
@@ -51,18 +58,22 @@ func schedulerTick() {
 		return
 	}
 
+	fmt.Println("queue item", queueItem)
+
 	filePath := fmt.Sprintf("./processing/%s/%s.pdf", queueItem.UID, queueItem.UID)
 	if _, existsError := os.Stat(filePath); errors.Is(existsError, os.ErrNotExist) {
 		// TODO: fix the issue with excessive deleting
+		fmt.Println("deleting")
 		database.Queue.DeleteOne(ctx, bson.D{{Key: "uid", Value: queueItem.UID}})
 		return
 	}
 	_, queryError = database.Queue.UpdateOne(
 		ctx,
-		bson.D{{Key: "_id", Value: queueItem.UID}},
+		bson.D{{Key: "uid", Value: queueItem.UID}},
 		bson.D{
 			{Key: "$set", Value: bson.D{
 				{Key: "status", Value: constants.QUEUE_STATUSES.InProgress},
+				{Key: "updatedAt", Value: gohelpers.MakeTimestamp()},
 			}},
 		},
 	)
@@ -88,10 +99,11 @@ func schedulerTick() {
 
 	_, queryError = database.Queue.UpdateOne(
 		ctx,
-		bson.D{{Key: "_id", Value: queueItem.UID}},
+		bson.D{{Key: "uid", Value: queueItem.UID}},
 		bson.D{
 			{Key: "$set", Value: bson.D{
 				{Key: "status", Value: constants.QUEUE_STATUSES.Processed},
+				{Key: "updatedAt", Value: gohelpers.MakeTimestamp()},
 			}},
 		},
 	)
@@ -104,12 +116,15 @@ func schedulerTick() {
 func LaunchCRON() {
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
-	_, updateError := database.Queue.UpdateOne(
+	_, updateError := database.Queue.UpdateMany(
 		ctx,
-		bson.D{},
+		bson.D{
+			{Key: "status", Value: constants.QUEUE_STATUSES.InProgress},
+		},
 		bson.D{
 			{Key: "$set", Value: bson.D{
 				{Key: "status", Value: constants.QUEUE_STATUSES.Queued},
+				{Key: "updatedAt", Value: gohelpers.MakeTimestamp()},
 			}},
 		},
 	)
