@@ -11,6 +11,8 @@ var ERROR_MESSAGES = ErrorMessages{
 	CouldNotLoadRPCCredentials: "Could not load RPC credentials",
 }
 
+const MAX_BODY_LIMIT int = 150
+
 var RESPONSE_MESSAGES = ResponseMessages{
 	InternalServerError: "INTERNAL_SERVER_ERROR",
 	InvalidFile:         "INVALID_FILE",

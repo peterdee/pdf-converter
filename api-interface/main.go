@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/favicon"
@@ -25,7 +26,16 @@ func main() {
 
 	grpc_client.CreateRPCConnection()
 
+	maxBodyLimit := constants.MAX_BODY_LIMIT
+	maxBodyLimitString := os.Getenv("MAX_BODY_LIMIT")
+	if maxBodyLimitString != "" {
+		value, conversionError := strconv.Atoi(maxBodyLimitString)
+		if conversionError == nil {
+			maxBodyLimit = value
+		}
+	}
 	app := fiber.New(fiber.Config{
+		BodyLimit:    maxBodyLimit * 1024 * 1024,
 		ErrorHandler: utilities.ErrorHandler,
 	})
 

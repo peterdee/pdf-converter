@@ -3,6 +3,7 @@ package grpc_generated
 import (
 	context "context"
 	"encoding/hex"
+	"fmt"
 	"log"
 	"os"
 	"time"
@@ -70,11 +71,16 @@ func QueueFile(bytes []byte, filename string) (*QueueFileResponse, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
+	// TODO: set payload limits
+
 	response, responseError := Client.QueueFile(
 		ctx,
 		&QueueFileRequest{Bytes: hex.EncodeToString(bytes), Filename: filename},
+		// grpc.MaxCallRecvMsgSize(300*1024*1024),
+		// grpc.MaxCallSendMsgSize(300*1024*1024),
 	)
 	if responseError != nil {
+		fmt.Println(responseError)
 		return nil, responseError
 	}
 	return response, nil
