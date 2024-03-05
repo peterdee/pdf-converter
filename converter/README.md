@@ -1,5 +1,11 @@
 ## converter
 
+This microservice converts PDF files into JPEG files and is connected to [`api-interface`](../api-interface) microservice via gRPC
+
+### Environment variables
+
+This microservice requires its own set of environment variables, `.env` file is required, see [`.env.example`](./.env.example) for details
+
 ### Deploy (MacOS)
 
 This microservice uses [ImageMagick](https://imagemagick.org/script/download.php) and [Ghostscript](https://ghostscript.com/docs/9.54.0/Install.htm). Both should be installed into the system:
@@ -27,10 +33,22 @@ These files can be regenerated with the [`proto.sh`](./proto.sh) script:
 bash proto.sh
 ```
 
-// TODO: dependencies
+Additional dependencies are required:
+
+```shell script
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+```
 
 ### Launch
 
+Download all of the necessary packages:
+
+```shell script
+go mod download
+```
+
+Run the application:
 ```shell script
 # Without AIR
 export CGO_CFLAGS_ALLOW='-Xpreprocessor' && go run ./
@@ -38,3 +56,5 @@ export CGO_CFLAGS_ALLOW='-Xpreprocessor' && go run ./
 # With AIR
 export CGO_CFLAGS_ALLOW='-Xpreprocessor' && air
 ```
+
+By default gRPC server will be launched on http://localhost:50051

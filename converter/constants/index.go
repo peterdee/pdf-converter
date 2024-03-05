@@ -16,6 +16,7 @@ var ERROR_MESSAGES = ErrorMessages{
 	CouldNotLoadMongoConnectionString: "Could not load MongoDB connection string",
 	CouldNotLoadRPCCredentials:        "Could not load RPC credentials",
 	MongoTransactionError:             "Mongo transaction error",
+	TargetDirectoryIsEmpty:            "target directory is empty",
 }
 
 const PORT = "50051"

@@ -2,11 +2,14 @@ package utilities
 
 import (
 	"archive/zip"
+	"errors"
 	"fmt"
 	"io"
 	"log"
 	"os"
 	"strings"
+
+	"converter/constants"
 )
 
 func CreateZipArchive(uid string) error {
@@ -16,7 +19,7 @@ func CreateZipArchive(uid string) error {
 		return readDirError
 	}
 	if len(entries) == 0 {
-		return nil
+		return errors.New(constants.ERROR_MESSAGES.TargetDirectoryIsEmpty)
 	}
 
 	archive, fileError := os.Create(fmt.Sprintf("%s/%s.zip", dirPath, uid))
@@ -28,22 +31,31 @@ func CreateZipArchive(uid string) error {
 	zipWriter := zip.NewWriter(archive)
 	for _, entry := range entries {
 		partials := strings.Split(entry.Name(), ".")
-		extention := partials[len(partials)-1]
+		if len(partials) < 2 {
+			continue
+		}
 
-		// TODO: improve
-		if !entry.IsDir() && strings.ToLower(extention) == "jpg" {
-			file, fileError := os.Open(fmt.Sprintf("%s/%s", dirPath, entry.Name()))
-			if fileError == nil {
-				writer, writerError := zipWriter.Create(entry.Name())
-				if writerError == nil {
-					if _, err := io.Copy(writer, file); err != nil {
-						panic(err)
-					}
-				}
-			}
-			defer file.Close()
+		extention := partials[len(partials)-1]
+		if !(!entry.IsDir() && strings.ToLower(extention) == "jpg") {
+			continue
+		}
+
+		file, fileError := os.Open(fmt.Sprintf("%s/%s", dirPath, entry.Name()))
+		if fileError != nil {
+			continue
+		}
+		defer file.Close()
+
+		writer, writerError := zipWriter.Create(entry.Name())
+		if writerError != nil {
+			continue
+		}
+
+		if _, err := io.Copy(writer, file); err != nil {
+			continue
 		}
 	}
+
 	zipWriter.Close()
 	return nil
 }

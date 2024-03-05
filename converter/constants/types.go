@@ -14,6 +14,7 @@ type ErrorMessages struct {
 	CouldNotLoadMongoConnectionString string
 	CouldNotLoadRPCCredentials        string
 	MongoTransactionError             string
+	TargetDirectoryIsEmpty            string
 }
 
 type QueueStatuses struct {

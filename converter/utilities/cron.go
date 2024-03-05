@@ -25,8 +25,6 @@ func schedulerTick() {
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
-	fmt.Println("tick")
-
 	var inProgress database.QueueEntry
 	queryError := database.Queue.FindOne(
 		ctx,
@@ -40,8 +38,6 @@ func schedulerTick() {
 	if inProgress.UID != "" {
 		return
 	}
-
-	fmt.Println("not in progress")
 
 	var queueItem database.QueueEntry
 	queryError = database.Queue.FindOne(
@@ -58,12 +54,8 @@ func schedulerTick() {
 		return
 	}
 
-	fmt.Println("queue item", queueItem)
-
 	filePath := fmt.Sprintf("./processing/%s/%s.pdf", queueItem.UID, queueItem.UID)
 	if _, existsError := os.Stat(filePath); errors.Is(existsError, os.ErrNotExist) {
-		// TODO: fix the issue with excessive deleting
-		fmt.Println("deleting")
 		database.Queue.DeleteOne(ctx, bson.D{{Key: "uid", Value: queueItem.UID}})
 		return
 	}
