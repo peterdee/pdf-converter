@@ -68,16 +68,12 @@ func GetInfo(uid string) (*GetInfoResponse, error) {
 }
 
 func QueueFile(bytes []byte, filename string) (*QueueFileResponse, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
 	defer cancel()
-
-	// TODO: set payload limits
 
 	response, responseError := Client.QueueFile(
 		ctx,
 		&QueueFileRequest{Bytes: hex.EncodeToString(bytes), Filename: filename},
-		// grpc.MaxCallRecvMsgSize(300*1024*1024),
-		// grpc.MaxCallSendMsgSize(300*1024*1024),
 	)
 	if responseError != nil {
 		fmt.Println(responseError)

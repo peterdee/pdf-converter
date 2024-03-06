@@ -1,8 +1,9 @@
 package constants
 
 type EnvNames struct {
-	GRPCAddress string
-	Port        string
+	GRPCAddress  string
+	MaxBodyLimit string
+	Port         string
 }
 
 type ErrorMessages struct {

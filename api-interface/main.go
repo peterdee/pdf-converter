@@ -27,7 +27,7 @@ func main() {
 	grpc_client.CreateRPCConnection()
 
 	maxBodyLimit := constants.MAX_BODY_LIMIT
-	maxBodyLimitString := os.Getenv("MAX_BODY_LIMIT")
+	maxBodyLimitString := os.Getenv(constants.ENV_NAMES.MaxBodyLimit)
 	if maxBodyLimitString != "" {
 		value, conversionError := strconv.Atoi(maxBodyLimitString)
 		if conversionError == nil {

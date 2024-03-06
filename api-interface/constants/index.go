@@ -1,8 +1,9 @@
 package constants
 
 var ENV_NAMES = EnvNames{
-	GRPCAddress: "GRPC_ADDRESS",
-	Port:        "PORT",
+	GRPCAddress:  "GRPC_ADDRESS",
+	MaxBodyLimit: "MAX_BODY_LIMIT",
+	Port:         "PORT",
 }
 
 var ERROR_MESSAGES = ErrorMessages{
