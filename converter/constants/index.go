@@ -3,6 +3,7 @@ package constants
 const DATABASE_NAME = "queuedb"
 
 var ENV_NAMES = EnvNames{
+	MaxBodyLimit:          "MAX_BODY_LIMIT",
 	MongoConnectionString: "MONGO_CONNECTION_STRING",
 	MongoDatabaseName:     "MONGO_DATABASE_NAME",
 	Port:                  "PORT",
@@ -18,6 +19,8 @@ var ERROR_MESSAGES = ErrorMessages{
 	MongoTransactionError:             "Mongo transaction error",
 	TargetDirectoryIsEmpty:            "target directory is empty",
 }
+
+const MAX_BODY_LIMIT int = 300
 
 const PORT = "50051"
 

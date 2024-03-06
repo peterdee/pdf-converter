@@ -22,12 +22,15 @@ import (
 var Scheduler *cron.Cron
 
 func schedulerTick() {
-	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
-	defer cancel()
+	initialContext, cancelInitialContext := context.WithTimeout(
+		context.Background(),
+		15*time.Second,
+	)
+	defer cancelInitialContext()
 
 	var inProgress database.QueueEntry
 	queryError := database.Queue.FindOne(
-		ctx,
+		initialContext,
 		bson.D{
 			{Key: "status", Value: constants.QUEUE_STATUSES.InProgress},
 		},
@@ -41,7 +44,7 @@ func schedulerTick() {
 
 	var queueItem database.QueueEntry
 	queryError = database.Queue.FindOne(
-		ctx,
+		initialContext,
 		bson.D{
 			{Key: "status", Value: constants.QUEUE_STATUSES.Queued},
 		},
@@ -56,11 +59,11 @@ func schedulerTick() {
 
 	filePath := fmt.Sprintf("./processing/%s/%s.pdf", queueItem.UID, queueItem.UID)
 	if _, existsError := os.Stat(filePath); errors.Is(existsError, os.ErrNotExist) {
-		database.Queue.DeleteOne(ctx, bson.D{{Key: "uid", Value: queueItem.UID}})
+		database.Queue.DeleteOne(initialContext, bson.D{{Key: "uid", Value: queueItem.UID}})
 		return
 	}
 	_, queryError = database.Queue.UpdateOne(
-		ctx,
+		initialContext,
 		bson.D{{Key: "uid", Value: queueItem.UID}},
 		bson.D{
 			{Key: "$set", Value: bson.D{
@@ -89,8 +92,13 @@ func schedulerTick() {
 		log.Fatal(deleteError)
 	}
 
+	postContext, cancelPostContext := context.WithTimeout(
+		context.Background(),
+		15*time.Second,
+	)
+	defer cancelPostContext()
 	_, queryError = database.Queue.UpdateOne(
-		ctx,
+		postContext,
 		bson.D{{Key: "uid", Value: queueItem.UID}},
 		bson.D{
 			{Key: "$set", Value: bson.D{

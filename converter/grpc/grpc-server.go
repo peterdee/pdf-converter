@@ -4,6 +4,8 @@ import (
 	context "context"
 	"log"
 	"net"
+	"os"
+	"strconv"
 
 	grpc "google.golang.org/grpc"
 
@@ -67,7 +69,18 @@ func (s *server) QueueFile(
 }
 
 func CreateServer(tcpServer net.Listener) {
-	rpcServer := grpc.NewServer()
+	maxBodyLimit := constants.MAX_BODY_LIMIT
+	maxBodyLimitString := os.Getenv(constants.ENV_NAMES.MaxBodyLimit)
+	if maxBodyLimitString != "" {
+		value, conversionError := strconv.Atoi(maxBodyLimitString)
+		if conversionError != nil {
+			maxBodyLimit = value
+		}
+	}
+	rpcServer := grpc.NewServer(
+		grpc.MaxRecvMsgSize(1024*1024*maxBodyLimit),
+		grpc.MaxSendMsgSize(1024*1024*maxBodyLimit),
+	)
 	RegisterConverterServer(rpcServer, &server{})
 	log.Printf("gRPC server is listening at %v", tcpServer.Addr())
 	if serveError := rpcServer.Serve(tcpServer); serveError != nil {

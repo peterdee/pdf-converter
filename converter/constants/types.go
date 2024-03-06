@@ -1,6 +1,7 @@
 package constants
 
 type EnvNames struct {
+	MaxBodyLimit          string
 	MongoConnectionString string
 	MongoDatabaseName     string
 	Port                  string
