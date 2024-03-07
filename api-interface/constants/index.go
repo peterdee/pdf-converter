@@ -17,6 +17,7 @@ const MAX_BODY_LIMIT int = 150
 var RESPONSE_MESSAGES = ResponseMessages{
 	InternalServerError: "INTERNAL_SERVER_ERROR",
 	InvalidFile:         "INVALID_FILE",
+	InvalidUID:          "INVALID_UID",
 	MissingFile:         "MISSING_FILE",
 	MissingUID:          "MISSING_UID",
 	Ok:                  "OK",

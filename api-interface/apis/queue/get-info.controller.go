@@ -19,6 +19,9 @@ func GetInfoController(context fiber.Ctx) error {
 
 	info, infoError := grpc_client.GetInfo(uid)
 	if infoError != nil {
+		if infoError.Error() == "invalid UID" {
+			return fiber.NewError(fiber.StatusBadRequest, constants.RESPONSE_MESSAGES.InvalidUID)
+		}
 		return fiber.NewError(fiber.StatusInternalServerError)
 	}
 

@@ -15,6 +15,7 @@ type ErrorMessages struct {
 type ResponseMessages struct {
 	InternalServerError string
 	InvalidFile         string
+	InvalidUID          string
 	MissingFile         string
 	MissingUID          string
 	Ok                  string
