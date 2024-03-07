@@ -29,3 +29,7 @@ var QUEUE_STATUSES = QueueStatuses{
 	Processed:  "processed",
 	Queued:     "queued",
 }
+
+var RESPONSE_ERRORS = ResponseErrors{
+	InvalidUID: "INVALID_UID",
+}

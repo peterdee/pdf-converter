@@ -23,3 +23,7 @@ type QueueStatuses struct {
 	Processed  string
 	Queued     string
 }
+
+type ResponseErrors struct {
+	InvalidUID string
+}

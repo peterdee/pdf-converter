@@ -25,26 +25,29 @@ func GetInfo(uid string) (*GetInfoResult, error) {
 		return nil, queryError
 	}
 	if queueEntry.UID == "" {
-		return nil, errors.New("invalid UID")
+		return nil, errors.New(constants.RESPONSE_ERRORS.InvalidUID)
 	}
 
-	// TODO: finalize
-	var queuedEntries int
+	var queuedEntries int64 = 0
 	if queueEntry.Status == constants.QUEUE_STATUSES.Queued {
 		count, countError := database.Queue.CountDocuments(
 			ctx,
 			bson.D{
 				{Key: "status", Value: constants.QUEUE_STATUSES.Queued},
+				{Key: "updatedAt", Value: bson.D{
+					{Key: "$lte", Value: queueEntry.UpdatedAt},
+				}},
 			},
 		)
 		if countError != nil {
 			return nil, countError
 		}
+		queuedEntries = count
 	}
 
 	response := &GetInfoResult{
 		Filename:    queueEntry.OriginalFileName,
-		QueuedItems: 1,
+		QueuedItems: queuedEntries,
 		Status:      queueEntry.Status,
 		UID:         uid,
 	}
