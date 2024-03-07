@@ -10,12 +10,12 @@ var ENV_NAMES = EnvNames{
 }
 
 var ERROR_MESSAGES = ErrorMessages{
-	FailedToServeRPCServer:            "Failed to serve gRPC server",
 	CouldNotConnectToMongo:            "Could not connect to MongoDB",
 	CouldNotConnectToRPC:              "Could not connect to RPC",
 	CouldNotLoadEnvFile:               "Could not load .env file",
 	CouldNotLoadMongoConnectionString: "Could not load MongoDB connection string",
 	CouldNotLoadRPCCredentials:        "Could not load RPC credentials",
+	FailedToServeRPCServer:            "Failed to serve gRPC server",
 	MongoTransactionError:             "Mongo transaction error",
 	TargetDirectoryIsEmpty:            "target directory is empty",
 }
