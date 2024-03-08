@@ -25,5 +25,7 @@ type QueueStatuses struct {
 }
 
 type ResponseErrors struct {
-	InvalidUID string
+	ArchiveAlreadyDeleted string
+	InvalidUID            string
+	NotProcessed          string
 }

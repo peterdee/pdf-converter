@@ -31,5 +31,7 @@ var QUEUE_STATUSES = QueueStatuses{
 }
 
 var RESPONSE_ERRORS = ResponseErrors{
-	InvalidUID: "INVALID_UID",
+	ArchiveAlreadyDeleted: "ARCHIVE_ALREADY_DELETED",
+	InvalidUID:            "INVALID_UID",
+	NotProcessed:          "NOT_PROCESSED",
 }
