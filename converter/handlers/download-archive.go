@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"os"
@@ -39,10 +40,17 @@ func DownloadArchive(uid string) (*DownloadArchiveResult, error) {
 		return nil, errors.New(constants.RESPONSE_ERRORS.ArchiveAlreadyDeleted)
 	}
 
-	// TODO: load file, convert into bytes / string & return (optionally delete zip with defer)
+	bytes, readError := os.ReadFile(filePath)
+	if readError != nil {
+		return nil, errors.New(constants.RESPONSE_ERRORS.ArchiveAlreadyDeleted)
+	}
+
+	// defer func() {
+	// 	os.Remove(filePath)
+	// }()
 
 	response := &DownloadArchiveResult{
-		Bytes:       "bytes",
+		Bytes:       hex.EncodeToString(bytes),
 		Filename:    queueEntry.OriginalFileName,
 		ProcessedAt: queueEntry.UpdatedAt,
 		UID:         queueEntry.UID,
