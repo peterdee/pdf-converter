@@ -1,11 +1,15 @@
 package download
 
 import (
+	"bytes"
+	"encoding/hex"
+	"fmt"
+	"strings"
+
 	"github.com/gofiber/fiber/v3"
 
 	"api-interface/constants"
 	grpc_generated "api-interface/grpc"
-	"api-interface/utilities"
 )
 
 func DownloadController(context fiber.Ctx) error {
@@ -17,20 +21,23 @@ func DownloadController(context fiber.Ctx) error {
 		)
 	}
 
+	// TODO: hanlde errors properly
 	response, downloadError := grpc_generated.DownloadArchive(uid)
 	if downloadError != nil {
 		return fiber.NewError(fiber.StatusInternalServerError)
 	}
 
-	// TODO: should download archive
+	bytesData, decodeError := hex.DecodeString(response.Bytes)
+	if decodeError != nil {
+		return fiber.NewError(fiber.StatusInternalServerError)
+	}
 
-	return utilities.Response(utilities.ResponseOptions{
-		Context: context,
-		Data: fiber.Map{
-			"bytes":       &response.Bytes,
-			"filename":    &response.Filename,
-			"processedAt": &response.Processed,
-			"uid":         &response.Uid,
-		},
-	})
+	partials := strings.Split(response.Filename, ".")
+	filename := strings.Join(partials[:len(partials)-1], ".")
+	context.Set(
+		"Content-Disposition",
+		fmt.Sprintf("inline; filename=%s.zip", filename),
+	)
+
+	return context.SendStream(bytes.NewReader(bytesData))
 }

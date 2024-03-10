@@ -45,6 +45,7 @@ func DownloadArchive(uid string) (*DownloadArchiveResult, error) {
 		return nil, errors.New(constants.RESPONSE_ERRORS.ArchiveAlreadyDeleted)
 	}
 
+	// TODO: should delete files on some condition
 	// defer func() {
 	// 	os.Remove(filePath)
 	// }()
