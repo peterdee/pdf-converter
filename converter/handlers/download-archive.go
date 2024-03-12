@@ -8,6 +8,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/julyskies/gohelpers"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 
@@ -45,10 +46,18 @@ func DownloadArchive(uid string) (*DownloadArchiveResult, error) {
 		return nil, errors.New(constants.RESPONSE_ERRORS.ArchiveAlreadyDeleted)
 	}
 
-	// TODO: should delete files on some condition
-	// defer func() {
-	// 	os.Remove(filePath)
-	// }()
+	_, queryError = database.Queue.UpdateOne(
+		ctx,
+		bson.D{{Key: "uid", Value: queueEntry.UID}},
+		bson.D{
+			{Key: "$set", Value: bson.D{
+				{Key: "downloadedAt", Value: gohelpers.MakeTimestamp()},
+			}},
+		},
+	)
+	if queryError != nil && queryError != mongo.ErrNoDocuments {
+		return nil, queryError
+	}
 
 	response := &DownloadArchiveResult{
 		Bytes:       hex.EncodeToString(bytes),

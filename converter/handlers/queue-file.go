@@ -40,6 +40,7 @@ func QueueFile(encoded string, filename string) (*QueueFileResult, error) {
 	now := gohelpers.MakeTimestamp()
 	_, insertionError := database.Queue.InsertOne(ctx, bson.D{
 		{Key: "createdAt", Value: now},
+		{Key: "downloadedAt", Value: 0},
 		{Key: "originalFileName", Value: filename},
 		{Key: "status", Value: constants.QUEUE_STATUSES.Queued},
 		{Key: "uid", Value: hash},
