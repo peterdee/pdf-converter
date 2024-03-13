@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/julyskies/gohelpers"
@@ -19,9 +20,51 @@ import (
 	"converter/database"
 )
 
-var Scheduler *cron.Cron
+func archiveRemovalTick() {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 
-func schedulerTick() {
+	archiveStoredDays := constants.ARCHIVE_STORED_DAYS
+	if value := os.Getenv(constants.ENV_NAMES.ArchiveStoredDays); value != "" {
+		parsed, parsingError := strconv.Atoi(value)
+		if parsingError == nil {
+			archiveStoredDays = parsed
+		}
+	}
+
+	var deletableEntries []database.QueueEntry
+	cursor, queryError := database.Queue.Find(
+		ctx,
+		bson.D{
+			{Key: "downloadedAt", Value: bson.D{
+				{
+					Key:   "$lt",
+					Value: gohelpers.MakeTimestamp() - (60 * 60 * 24 * int64(archiveStoredDays)),
+				},
+			}},
+		},
+	)
+	if queryError != nil && queryError != mongo.ErrNoDocuments {
+		log.Fatal(queryError)
+	}
+	if queryError == mongo.ErrNoDocuments {
+		return
+	}
+
+	if decodeError := cursor.All(ctx, &deletableEntries); decodeError != nil {
+		log.Fatal(decodeError)
+	}
+	if len(deletableEntries) == 0 {
+		return
+	}
+
+	for _, entry := range deletableEntries {
+		directoryPath := fmt.Sprintf("./processing/%s", entry.UID)
+		os.RemoveAll(directoryPath)
+	}
+}
+
+func processingTick() {
 	initialContext, cancelInitialContext := context.WithTimeout(
 		context.Background(),
 		15*time.Second,
@@ -132,14 +175,25 @@ func LaunchCRON() {
 		log.Fatal(updateError)
 	}
 
-	Scheduler = cron.New()
-	_, schedulerError := Scheduler.AddFunc(
-		"* * * * *",
-		schedulerTick,
+	ArchiveRemovalScheduler := cron.New()
+	_, schedulerError := ArchiveRemovalScheduler.AddFunc(
+		"* * * * *", // TODO: proper schedule
+		archiveRemovalTick,
 	)
 	if schedulerError != nil {
 		log.Fatal(schedulerError)
 	}
-	Scheduler.Start()
+	ArchiveRemovalScheduler.Start()
+
+	ProcessingScheduler := cron.New()
+	_, schedulerError = ProcessingScheduler.AddFunc(
+		"* * * * *",
+		processingTick,
+	)
+	if schedulerError != nil {
+		log.Fatal(schedulerError)
+	}
+	ProcessingScheduler.Start()
+
 	log.Println("CRON started")
 }

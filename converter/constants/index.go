@@ -1,8 +1,11 @@
 package constants
 
+const ARCHIVE_STORED_DAYS int = 14
+
 const DATABASE_NAME = "queuedb"
 
 var ENV_NAMES = EnvNames{
+	ArchiveStoredDays:     "ARCHIVE_STORED_DAYS",
 	MaxBodyLimit:          "MAX_BODY_LIMIT",
 	MongoConnectionString: "MONGO_CONNECTION_STRING",
 	MongoDatabaseName:     "MONGO_DATABASE_NAME",
