@@ -9,12 +9,13 @@ type EnvNames struct {
 }
 
 type ErrorMessages struct {
-	FailedToServeRPCServer            string
 	CouldNotConnectToMongo            string
 	CouldNotConnectToRPC              string
 	CouldNotLoadEnvFile               string
 	CouldNotLoadMongoConnectionString string
 	CouldNotLoadRPCCredentials        string
+	FailedToConvertData               string
+	FailedToServeRPCServer            string
 	MongoTransactionError             string
 	TargetDirectoryIsEmpty            string
 }
