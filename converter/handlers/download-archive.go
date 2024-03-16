@@ -63,6 +63,7 @@ func DownloadArchive(uid string) (*DownloadArchiveResult, error) {
 				bson.D{
 					{Key: "$set", Value: bson.D{
 						{Key: "downloadedAt", Value: gohelpers.MakeTimestamp()},
+						{Key: "totalDownloads", Value: queueEntry.TotalDownloads + 1},
 					}},
 				},
 			)

@@ -8,6 +8,7 @@ type QueueEntry struct {
 	ID               primitive.ObjectID `bson:"_id" json:"id,omitempty"`
 	OriginalFileName string             `json:"originalFileName"`
 	Status           string             `json:"status"`
+	TotalDownloads   int                `json:"totalDownloads"`
 	UID              string             `json:"uid"`
 	UpdatedAt        int64              `json:"updatedAt"`
 }

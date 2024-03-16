@@ -7,6 +7,8 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/writeconcern"
 
 	"converter/constants"
 	"converter/database"
@@ -16,40 +18,62 @@ func GetInfo(uid string) (*GetInfoResult, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
-	var queueEntry database.QueueEntry
-	queryError := database.Queue.FindOne(
+	session, sessionError := database.Client.StartSession()
+	if sessionError != nil {
+		return nil, sessionError
+	}
+	defer session.EndSession(ctx)
+
+	result, transactionError := session.WithTransaction(
 		ctx,
-		bson.D{{Key: "uid", Value: uid}},
-	).Decode(&queueEntry)
-	if queryError != nil && queryError != mongo.ErrNoDocuments {
-		return nil, queryError
-	}
-	if queueEntry.UID == "" {
-		return nil, errors.New(constants.RESPONSE_ERRORS.InvalidUID)
-	}
+		func(tctx mongo.SessionContext) (interface{}, error) {
+			var queueEntry database.QueueEntry
+			queryError := database.Queue.FindOne(
+				tctx,
+				bson.D{{Key: "uid", Value: uid}},
+			).Decode(&queueEntry)
+			if queryError != nil && queryError != mongo.ErrNoDocuments {
+				return nil, queryError
+			}
+			if queueEntry.UID == "" {
+				return nil, errors.New(constants.RESPONSE_ERRORS.InvalidUID)
+			}
 
-	var queuedEntries int64 = 0
-	if queueEntry.Status == constants.QUEUE_STATUSES.Queued {
-		count, countError := database.Queue.CountDocuments(
-			ctx,
-			bson.D{
-				{Key: "status", Value: constants.QUEUE_STATUSES.Queued},
-				{Key: "updatedAt", Value: bson.D{
-					{Key: "$lte", Value: queueEntry.UpdatedAt},
-				}},
-			},
-		)
-		if countError != nil {
-			return nil, countError
-		}
-		queuedEntries = count
-	}
+			var queuedEntries int64 = 0
+			if queueEntry.Status == constants.QUEUE_STATUSES.Queued {
+				count, countError := database.Queue.CountDocuments(
+					tctx,
+					bson.D{
+						{Key: "status", Value: constants.QUEUE_STATUSES.Queued},
+						{Key: "updatedAt", Value: bson.D{
+							{Key: "$lte", Value: queueEntry.UpdatedAt},
+						}},
+					},
+				)
+				if countError != nil {
+					return nil, countError
+				}
+				queuedEntries = count
+			}
 
-	response := &GetInfoResult{
-		Filename:    queueEntry.OriginalFileName,
-		QueuedItems: queuedEntries,
-		Status:      queueEntry.Status,
-		UID:         uid,
+			response := &GetInfoResult{
+				DownloadedAt:   queueEntry.DownloadedAt,
+				Filename:       queueEntry.OriginalFileName,
+				QueuedItems:    queuedEntries,
+				Status:         queueEntry.Status,
+				TotalDownloads: queueEntry.TotalDownloads,
+				UID:            uid,
+			}
+			return response, nil
+		},
+		options.Transaction().SetWriteConcern(writeconcern.Majority()),
+	)
+	if transactionError != nil {
+		return nil, transactionError
 	}
-	return response, nil
+	if converted, ok := result.(*GetInfoResult); ok {
+		return converted, nil
+	} else {
+		return nil, errors.New(constants.ERROR_MESSAGES.FailedToConvertData)
+	}
 }

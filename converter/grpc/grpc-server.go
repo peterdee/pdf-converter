@@ -43,10 +43,12 @@ func (s *server) GetInfo(
 		return nil, getInfoError
 	}
 	response := GetInfoResponse{
-		Count:    getInfoResult.QueuedItems,
-		Filename: getInfoResult.Filename,
-		Status:   getInfoResult.Status,
-		Uid:      getInfoResult.UID,
+		Count:          getInfoResult.QueuedItems,
+		DownloadedAt:   getInfoResult.DownloadedAt,
+		Filename:       getInfoResult.Filename,
+		Status:         getInfoResult.Status,
+		TotalDownloads: int64(getInfoResult.TotalDownloads),
+		Uid:            getInfoResult.UID,
 	}
 	return &response, nil
 }

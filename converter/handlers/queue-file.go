@@ -43,6 +43,7 @@ func QueueFile(encoded string, filename string) (*QueueFileResult, error) {
 		{Key: "downloadedAt", Value: now},
 		{Key: "originalFileName", Value: filename},
 		{Key: "status", Value: constants.QUEUE_STATUSES.Queued},
+		{Key: "totalDownloads", Value: 0},
 		{Key: "uid", Value: hash},
 		{Key: "updatedAt", Value: now},
 	})
