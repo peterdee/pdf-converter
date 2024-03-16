@@ -28,10 +28,12 @@ func GetInfoController(context fiber.Ctx) error {
 	return utilities.Response(utilities.ResponseOptions{
 		Context: context,
 		Data: fiber.Map{
-			"filename":   &info.Filename,
-			"queueCount": &info.Count,
-			"status":     &info.Status,
-			"uid":        &info.Uid,
+			"downloadedAt":   &info.DownloadedAt,
+			"filename":       &info.Filename,
+			"queueCount":     &info.Count,
+			"status":         &info.Status,
+			"totalDownloads": &info.TotalDownloads,
+			"uid":            &info.Uid,
 		},
 	})
 }
