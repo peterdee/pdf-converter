@@ -1,0 +1,11 @@
+# Directories
+.git/
+.idea/
+tmp/
+
+# Files
+.env.example
+APIS.md
+LICENSE.md
+proto.sh
+README.md
