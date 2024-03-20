@@ -1,9 +1,10 @@
 package constants
 
 var ENV_NAMES = EnvNames{
-	GRPCAddress:  "GRPC_ADDRESS",
-	MaxBodyLimit: "MAX_BODY_LIMIT",
-	Port:         "PORT",
+	GRPCAddress:      "GRPC_ADDRESS",
+	GRPCMaxReceiveMB: "GRPC_MAX_RECEIVE_MB",
+	MaxBodyLimit:     "MAX_BODY_LIMIT",
+	Port:             "PORT",
 }
 
 var ERROR_MESSAGES = ErrorMessages{
@@ -11,6 +12,8 @@ var ERROR_MESSAGES = ErrorMessages{
 	CouldNotLoadEnvFile:        "Could not load .env file",
 	CouldNotLoadRPCCredentials: "Could not load RPC credentials",
 }
+
+const GRPC_MAX_RECEIVE_MB int = 500
 
 const MAX_BODY_LIMIT int = 150
 

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"time"
 
 	"google.golang.org/grpc"
@@ -40,12 +41,22 @@ func CreateRPCConnection() {
 }
 
 func DownloadArchive(uid string) (*DownloadArchiveResponse, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
+
+	maxReceiveMB := constants.GRPC_MAX_RECEIVE_MB
+	maxReceiveMBString := os.Getenv(constants.ENV_NAMES.GRPCMaxReceiveMB)
+	if maxReceiveMBString != "" {
+		value, convertError := strconv.Atoi(maxReceiveMBString)
+		if convertError == nil {
+			maxReceiveMB = value
+		}
+	}
 
 	response, responseError := Client.DownloadArchive(
 		ctx,
 		&DownloadArchiveRequest{Uid: uid},
+		grpc.MaxCallRecvMsgSize(maxReceiveMB*1024*1024),
 	)
 	if responseError != nil {
 		return nil, responseError
