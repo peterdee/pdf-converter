@@ -16,6 +16,10 @@ type GetInfoResult struct {
 	UID            string
 }
 
+type GetQueueResult struct {
+	JSON string
+}
+
 type QueueFileResult struct {
 	Filename    string
 	QueuedItems int64

@@ -53,6 +53,17 @@ func (s *server) GetInfo(
 	return &response, nil
 }
 
+func (s *server) GetQueue(
+	ctx context.Context,
+	in *GetQueueRequest,
+) (*GetQueueResponse, error) {
+	getQueueResult, getQueueError := handlers.GetQueue(in.Limit, in.Page)
+	if getQueueError != nil {
+		return nil, getQueueError
+	}
+	return &GetQueueResponse{Json: getQueueResult.JSON}, nil
+}
+
 func (s *server) QueueFile(
 	ctx context.Context,
 	in *QueueFileRequest,
