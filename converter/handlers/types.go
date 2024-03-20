@@ -1,5 +1,7 @@
 package handlers
 
+import "converter/database"
+
 type DownloadArchiveResult struct {
 	Bytes       string
 	Filename    string
@@ -14,6 +16,14 @@ type GetInfoResult struct {
 	Status         string
 	TotalDownloads int
 	UID            string
+}
+
+type GetQueueJSON struct {
+	Items      []database.QueueEntry `json:"items"`
+	Limit      int                   `json:"limit"`
+	Page       int                   `json:"page"`
+	TotalItems int                   `json:"totalItems"`
+	TotalPages int                   `json:"totalPages"`
 }
 
 type GetQueueResult struct {
