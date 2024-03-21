@@ -3,7 +3,7 @@ package constants
 var ENV_NAMES = EnvNames{
 	GRPCAddress:      "GRPC_ADDRESS",
 	GRPCMaxReceiveMB: "GRPC_MAX_RECEIVE_MB",
-	MaxBodyLimit:     "MAX_BODY_LIMIT",
+	MaxBodyLimitMB:   "MAX_BODY_LIMIT_MB",
 	Port:             "PORT",
 }
 
@@ -15,7 +15,7 @@ var ERROR_MESSAGES = ErrorMessages{
 
 const GRPC_MAX_RECEIVE_MB int = 500
 
-const MAX_BODY_LIMIT int = 150
+const MAX_BODY_LIMIT_MB int = 150
 
 var RESPONSE_MESSAGES = ResponseMessages{
 	InternalServerError: "INTERNAL_SERVER_ERROR",

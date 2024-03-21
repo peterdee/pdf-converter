@@ -40,6 +40,20 @@ func CreateRPCConnection() {
 	Client = NewConverterClient(Connection)
 }
 
+func DeleteEntry(uid string) (*DeleteEntryResponse, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	response, responseError := Client.DeleteEntry(
+		ctx,
+		&DeleteEntryRequest{Uid: uid},
+	)
+	if responseError != nil {
+		return nil, responseError
+	}
+	return response, nil
+}
+
 func DownloadArchive(uid string) (*DownloadArchiveResponse, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
@@ -71,6 +85,20 @@ func GetInfo(uid string) (*GetInfoResponse, error) {
 	response, responseError := Client.GetInfo(
 		ctx,
 		&GetInfoRequest{Uid: uid},
+	)
+	if responseError != nil {
+		return nil, responseError
+	}
+	return response, nil
+}
+
+func GetQueue(limit, page int64) (*GetQueueResponse, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	response, responseError := Client.GetQueue(
+		ctx,
+		&GetQueueRequest{Limit: limit, Page: page},
 	)
 	if responseError != nil {
 		return nil, responseError

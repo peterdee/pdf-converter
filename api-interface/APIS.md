@@ -24,7 +24,7 @@ Response:
     "fileName": "filename.pdf",
     "queueCount": 1,
     "status": "queued",
-    "uid": "2d05c44d110a7f09fea37c86a25dc9f9"
+    "uid": "<uid>"
   },
   "datetime": 1710011577018,
   "info": "OK",
@@ -33,7 +33,47 @@ Response:
 }
 ```
 
-#### 2. /api/queue/:uid [GET]
+#### 2. /api/queue [GET]
+
+This API loads paginated queue data
+
+Example request:
+
+```text
+/api/queue?limit=10&page=5
+```
+
+Both `limit` and `page` query parameters are optional
+
+Minimal `limit` is 1, maximum `limit` is 100 
+
+Response:
+
+```json
+{
+  "datetime": 1710011577018,
+  "info": "OK",
+  "request": "/api/queue/<uid> [DELETE]",
+  "status": 200
+}
+```
+
+#### 3. /api/queue/:uid [DELETE]
+
+This API deletes queue entry by UID
+
+Response:
+
+```json
+{
+  "datetime": 1710011577018,
+  "info": "OK",
+  "request": "/api/queue/<uid> [DELETE]",
+  "status": 200
+}
+```
+
+#### 4. /api/queue/:uid [GET]
 
 This API gets information about the queued file
 
@@ -45,15 +85,15 @@ Response:
     "filename": "filename.pdf",
     "queueCount": 0,
     "status": "processed",
-    "uid": "2d05c44d110a7f09fea37c86a25dc9f9"
+    "uid": "<uid>"
   },
   "datetime": 1710011841999,
   "info": "OK",
-  "request": "/api/queue/2d05c44d110a7f09fea37c86a25dc9f9 [GET]",
+  "request": "/api/queue/<uid> [GET]",
   "status": 200
 }
 ```
 
-#### 3. /api/download/:uid [GET]
+#### 5. /api/download/:uid [GET]
 
-This API downloads ZIP-archive with JPEG files
+This API downloads ZIP-archive with JPEG files, it returns a filestream with data

@@ -3,7 +3,7 @@ package constants
 type EnvNames struct {
 	GRPCAddress      string
 	GRPCMaxReceiveMB string
-	MaxBodyLimit     string
+	MaxBodyLimitMB   string
 	Port             string
 }
 
