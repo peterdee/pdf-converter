@@ -25,9 +25,7 @@ func (s *server) DeleteEntry(
 	if handlerError != nil {
 		return nil, handlerError
 	}
-	return &DeleteEntryResponse{
-		Deleted: result.Deleted,
-	}, nil
+	return &DeleteEntryResponse{Deleted: result.Deleted}, nil
 }
 
 func (s *server) DownloadArchive(
@@ -95,8 +93,8 @@ func (s *server) QueueFile(
 }
 
 func CreateServer(tcpServer net.Listener) {
-	maxBodyLimit := constants.MAX_BODY_LIMIT
-	maxBodyLimitString := os.Getenv(constants.ENV_NAMES.MaxBodyLimit)
+	maxBodyLimit := constants.MAX_BODY_LIMIT_MB
+	maxBodyLimitString := os.Getenv(constants.ENV_NAMES.MaxBodyLimitMB)
 	if maxBodyLimitString != "" {
 		value, conversionError := strconv.Atoi(maxBodyLimitString)
 		if conversionError != nil {

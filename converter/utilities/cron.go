@@ -21,7 +21,7 @@ import (
 )
 
 func archiveRemovalTick() {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 
 	archiveStoredDays := constants.ARCHIVE_STORED_DAYS
@@ -61,6 +61,24 @@ func archiveRemovalTick() {
 	for _, entry := range deletableEntries {
 		directoryPath := fmt.Sprintf("./processing/%s", entry.UID)
 		os.RemoveAll(directoryPath)
+	}
+
+	dirContent, dirError := os.ReadDir("./processing")
+	if dirError != nil {
+		log.Fatal(dirError)
+	}
+	for _, entry := range dirContent {
+		var databaseEntry database.QueueEntry
+		entryError := database.Queue.FindOne(
+			ctx,
+			bson.D{{
+				Key:   "uid",
+				Value: entry.Name(),
+			}},
+		).Decode(&databaseEntry)
+		if entryError == mongo.ErrNoDocuments {
+			os.RemoveAll(fmt.Sprintf("./processing/%s", entry.Name()))
+		}
 	}
 }
 

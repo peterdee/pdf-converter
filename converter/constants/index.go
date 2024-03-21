@@ -6,7 +6,7 @@ const DATABASE_NAME = "queuedb"
 
 var ENV_NAMES = EnvNames{
 	ArchiveStoredDays:     "ARCHIVE_STORED_DAYS",
-	MaxBodyLimit:          "MAX_BODY_LIMIT",
+	MaxBodyLimitMB:        "MAX_BODY_LIMIT",
 	MongoConnectionString: "MONGO_CONNECTION_STRING",
 	MongoDatabaseName:     "MONGO_DATABASE_NAME",
 	Port:                  "PORT",
@@ -24,7 +24,7 @@ var ERROR_MESSAGES = ErrorMessages{
 	TargetDirectoryIsEmpty:            "target directory is empty",
 }
 
-const MAX_BODY_LIMIT int = 300
+const MAX_BODY_LIMIT_MB int = 300
 
 const PORT = "50051"
 

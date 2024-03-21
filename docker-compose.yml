@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./api-interface/Dockerfile
+    depends_on: 
+      - converter
+    networks:
+      - backend
+  converter:
+    build:
+      context: .
+      dockerfile: ./converter/Dockerfile
+    networks:
+      - backend
+
+networks:
+  backend:
