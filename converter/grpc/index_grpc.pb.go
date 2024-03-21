@@ -22,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ConverterClient interface {
+	DeleteEntry(ctx context.Context, in *DeleteEntryRequest, opts ...grpc.CallOption) (*DeleteEntryResponse, error)
 	DownloadArchive(ctx context.Context, in *DownloadArchiveRequest, opts ...grpc.CallOption) (*DownloadArchiveResponse, error)
 	GetInfo(ctx context.Context, in *GetInfoRequest, opts ...grpc.CallOption) (*GetInfoResponse, error)
 	GetQueue(ctx context.Context, in *GetQueueRequest, opts ...grpc.CallOption) (*GetQueueResponse, error)
@@ -34,6 +35,15 @@ type converterClient struct {
 
 func NewConverterClient(cc grpc.ClientConnInterface) ConverterClient {
 	return &converterClient{cc}
+}
+
+func (c *converterClient) DeleteEntry(ctx context.Context, in *DeleteEntryRequest, opts ...grpc.CallOption) (*DeleteEntryResponse, error) {
+	out := new(DeleteEntryResponse)
+	err := c.cc.Invoke(ctx, "/api.Converter/DeleteEntry", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *converterClient) DownloadArchive(ctx context.Context, in *DownloadArchiveRequest, opts ...grpc.CallOption) (*DownloadArchiveResponse, error) {
@@ -76,6 +86,7 @@ func (c *converterClient) QueueFile(ctx context.Context, in *QueueFileRequest, o
 // All implementations must embed UnimplementedConverterServer
 // for forward compatibility
 type ConverterServer interface {
+	DeleteEntry(context.Context, *DeleteEntryRequest) (*DeleteEntryResponse, error)
 	DownloadArchive(context.Context, *DownloadArchiveRequest) (*DownloadArchiveResponse, error)
 	GetInfo(context.Context, *GetInfoRequest) (*GetInfoResponse, error)
 	GetQueue(context.Context, *GetQueueRequest) (*GetQueueResponse, error)
@@ -87,6 +98,9 @@ type ConverterServer interface {
 type UnimplementedConverterServer struct {
 }
 
+func (UnimplementedConverterServer) DeleteEntry(context.Context, *DeleteEntryRequest) (*DeleteEntryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteEntry not implemented")
+}
 func (UnimplementedConverterServer) DownloadArchive(context.Context, *DownloadArchiveRequest) (*DownloadArchiveResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DownloadArchive not implemented")
 }
@@ -110,6 +124,24 @@ type UnsafeConverterServer interface {
 
 func RegisterConverterServer(s grpc.ServiceRegistrar, srv ConverterServer) {
 	s.RegisterService(&Converter_ServiceDesc, srv)
+}
+
+func _Converter_DeleteEntry_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteEntryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ConverterServer).DeleteEntry(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.Converter/DeleteEntry",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ConverterServer).DeleteEntry(ctx, req.(*DeleteEntryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Converter_DownloadArchive_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -191,6 +223,10 @@ var Converter_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "api.Converter",
 	HandlerType: (*ConverterServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "DeleteEntry",
+			Handler:    _Converter_DeleteEntry_Handler,
+		},
 		{
 			MethodName: "DownloadArchive",
 			Handler:    _Converter_DownloadArchive_Handler,

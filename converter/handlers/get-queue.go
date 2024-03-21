@@ -16,11 +16,15 @@ import (
 )
 
 const LIMIT int64 = 20
+const MAX_LIMIT int64 = 100
 const PAGE int64 = 1
 
 func GetQueue(limit, page int64) (*GetQueueResult, error) {
 	if limit == 0 {
 		limit = LIMIT
+	}
+	if limit > MAX_LIMIT {
+		limit = MAX_LIMIT
 	}
 	if page == 0 {
 		page = PAGE

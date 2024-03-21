@@ -5,10 +5,19 @@ package api;
 option go_package = "grpc.generated";
 
 service Converter {
+  rpc DeleteEntry (DeleteEntryRequest) returns (DeleteEntryResponse) {}
   rpc DownloadArchive (DownloadArchiveRequest) returns (DownloadArchiveResponse) {}
   rpc GetInfo (GetInfoRequest) returns (GetInfoResponse) {}
   rpc GetQueue (GetQueueRequest) returns (GetQueueResponse) {}
   rpc QueueFile (QueueFileRequest) returns (QueueFileResponse) {}
+}
+
+message DeleteEntryRequest {
+  string uid = 1;
+}
+
+message DeleteEntryResponse {
+  bool deleted = 1;
 }
 
 message DownloadArchiveRequest {

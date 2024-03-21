@@ -17,6 +17,19 @@ type server struct {
 	UnimplementedConverterServer
 }
 
+func (s *server) DeleteEntry(
+	ctx context.Context,
+	in *DeleteEntryRequest,
+) (*DeleteEntryResponse, error) {
+	result, handlerError := handlers.DeleteEntry(in.Uid)
+	if handlerError != nil {
+		return nil, handlerError
+	}
+	return &DeleteEntryResponse{
+		Deleted: result.Deleted,
+	}, nil
+}
+
 func (s *server) DownloadArchive(
 	ctx context.Context,
 	in *DownloadArchiveRequest,

@@ -2,6 +2,10 @@ package handlers
 
 import "converter/database"
 
+type DeleteEntryResult struct {
+	Deleted bool
+}
+
 type DownloadArchiveResult struct {
 	Bytes       string
 	Filename    string
