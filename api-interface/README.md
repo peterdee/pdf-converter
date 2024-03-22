@@ -50,7 +50,7 @@ HTTP server will be available at http://localhost:8000
 Alternatively use Docker:
 
 ```shell script
-docker run -p 8000:8000 -it $(docker build -q .)
+docker run -p 8000:8000 --env-file .env -it $(docker build -q .)
 ```
 
 ### Available APIs

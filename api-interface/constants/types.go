@@ -1,6 +1,7 @@
 package constants
 
 type EnvNames struct {
+	EnvSource        string
 	GRPCAddress      string
 	GRPCMaxReceiveMB string
 	MaxBodyLimitMB   string

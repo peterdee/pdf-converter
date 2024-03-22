@@ -1,6 +1,7 @@
 package constants
 
 var ENV_NAMES = EnvNames{
+	EnvSource:        "ENV_SOURCE",
 	GRPCAddress:      "GRPC_ADDRESS",
 	GRPCMaxReceiveMB: "GRPC_MAX_RECEIVE_MB",
 	MaxBodyLimitMB:   "MAX_BODY_LIMIT_MB",
