@@ -2,6 +2,7 @@ package constants
 
 type EnvNames struct {
 	ArchiveStoredDays     string
+	EnvSource             string
 	MaxBodyLimitMB        string
 	MongoConnectionString string
 	MongoDatabaseName     string

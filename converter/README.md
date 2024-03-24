@@ -62,5 +62,5 @@ By default gRPC server will be launched on http://localhost:50051
 Alternatively use Docker:
 
 ```shell script
-docker run -p 50051:50051 -it $(docker build -q .)
+docker run -p 50051:50051 --env-file .env -it $(docker build -q .)
 ```

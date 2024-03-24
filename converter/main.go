@@ -15,8 +15,11 @@ import (
 )
 
 func main() {
-	if envError := godotenv.Load(); envError != nil {
-		log.Fatal(constants.ERROR_MESSAGES.CouldNotLoadEnvFile)
+	envSource := os.Getenv(constants.ENV_NAMES.EnvSource)
+	if envSource != "env" {
+		if envError := godotenv.Load(); envError != nil {
+			log.Fatal(constants.ERROR_MESSAGES.CouldNotLoadEnvFile)
+		}
 	}
 
 	database.CreateConnection()

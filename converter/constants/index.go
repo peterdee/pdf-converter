@@ -6,6 +6,7 @@ const DATABASE_NAME = "queuedb"
 
 var ENV_NAMES = EnvNames{
 	ArchiveStoredDays:     "ARCHIVE_STORED_DAYS",
+	EnvSource:             "ENV_SOURCE",
 	MaxBodyLimitMB:        "MAX_BODY_LIMIT",
 	MongoConnectionString: "MONGO_CONNECTION_STRING",
 	MongoDatabaseName:     "MONGO_DATABASE_NAME",
