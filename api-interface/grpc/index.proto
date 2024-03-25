@@ -10,6 +10,7 @@ service Converter {
   rpc GetInfo (GetInfoRequest) returns (GetInfoResponse) {}
   rpc GetQueue (GetQueueRequest) returns (GetQueueResponse) {}
   rpc QueueFile (QueueFileRequest) returns (QueueFileResponse) {}
+  rpc TestConnection (TestConnectionRequest) returns (TestConnectionResponse) {}
 }
 
 message DeleteEntryRequest {
@@ -63,4 +64,12 @@ message QueueFileResponse {
   string filename = 2;
   string status = 3;
   string uid = 4;
+}
+
+message TestConnectionRequest {
+  int64 timestamp = 1;
+}
+
+message TestConnectionResponse {
+  int64 timestamp = 1;
 }

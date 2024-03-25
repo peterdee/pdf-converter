@@ -5,11 +5,13 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/favicon"
 	"github.com/gofiber/fiber/v3/middleware/logger"
 	"github.com/joho/godotenv"
+	"github.com/julyskies/gohelpers"
 
 	"api-interface/apis/download"
 	"api-interface/apis/index"
@@ -28,6 +30,17 @@ func main() {
 	}
 
 	grpc_client.CreateRPCConnection()
+	for i := 0; i < 5; i += 1 {
+		timestamp := gohelpers.MakeTimestamp()
+		_, testError := grpc_client.TestConnection(timestamp)
+		if testError != nil {
+			log.Printf("Could not connect to RPC, retrying in %d sec", i)
+			time.Sleep(time.Second * time.Duration(i))
+		}
+		if i == 4 {
+			log.Fatal(constants.ERROR_MESSAGES.CouldNotConnectToRPC)
+		}
+	}
 
 	maxBodyLimit := constants.MAX_BODY_LIMIT_MB
 	maxBodyLimitString := os.Getenv(constants.ENV_NAMES.MaxBodyLimitMB)

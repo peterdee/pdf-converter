@@ -27,6 +27,7 @@ type ConverterClient interface {
 	GetInfo(ctx context.Context, in *GetInfoRequest, opts ...grpc.CallOption) (*GetInfoResponse, error)
 	GetQueue(ctx context.Context, in *GetQueueRequest, opts ...grpc.CallOption) (*GetQueueResponse, error)
 	QueueFile(ctx context.Context, in *QueueFileRequest, opts ...grpc.CallOption) (*QueueFileResponse, error)
+	TestConnection(ctx context.Context, in *TestConnectionRequest, opts ...grpc.CallOption) (*TestConnectionResponse, error)
 }
 
 type converterClient struct {
@@ -82,6 +83,15 @@ func (c *converterClient) QueueFile(ctx context.Context, in *QueueFileRequest, o
 	return out, nil
 }
 
+func (c *converterClient) TestConnection(ctx context.Context, in *TestConnectionRequest, opts ...grpc.CallOption) (*TestConnectionResponse, error) {
+	out := new(TestConnectionResponse)
+	err := c.cc.Invoke(ctx, "/api.Converter/TestConnection", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ConverterServer is the server API for Converter service.
 // All implementations must embed UnimplementedConverterServer
 // for forward compatibility
@@ -91,6 +101,7 @@ type ConverterServer interface {
 	GetInfo(context.Context, *GetInfoRequest) (*GetInfoResponse, error)
 	GetQueue(context.Context, *GetQueueRequest) (*GetQueueResponse, error)
 	QueueFile(context.Context, *QueueFileRequest) (*QueueFileResponse, error)
+	TestConnection(context.Context, *TestConnectionRequest) (*TestConnectionResponse, error)
 	mustEmbedUnimplementedConverterServer()
 }
 
@@ -112,6 +123,9 @@ func (UnimplementedConverterServer) GetQueue(context.Context, *GetQueueRequest) 
 }
 func (UnimplementedConverterServer) QueueFile(context.Context, *QueueFileRequest) (*QueueFileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method QueueFile not implemented")
+}
+func (UnimplementedConverterServer) TestConnection(context.Context, *TestConnectionRequest) (*TestConnectionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TestConnection not implemented")
 }
 func (UnimplementedConverterServer) mustEmbedUnimplementedConverterServer() {}
 
@@ -216,6 +230,24 @@ func _Converter_QueueFile_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Converter_TestConnection_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TestConnectionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ConverterServer).TestConnection(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.Converter/TestConnection",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ConverterServer).TestConnection(ctx, req.(*TestConnectionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Converter_ServiceDesc is the grpc.ServiceDesc for Converter service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -242,6 +274,10 @@ var Converter_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "QueueFile",
 			Handler:    _Converter_QueueFile_Handler,
+		},
+		{
+			MethodName: "TestConnection",
+			Handler:    _Converter_TestConnection_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -3,7 +3,6 @@ package grpc_generated
 import (
 	context "context"
 	"encoding/hex"
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -115,7 +114,20 @@ func QueueFile(bytes []byte, filename string) (*QueueFileResponse, error) {
 		&QueueFileRequest{Bytes: hex.EncodeToString(bytes), Filename: filename},
 	)
 	if responseError != nil {
-		fmt.Println(responseError)
+		return nil, responseError
+	}
+	return response, nil
+}
+
+func TestConnection(timestamp int64) (*TestConnectionResponse, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+
+	response, responseError := Client.TestConnection(
+		ctx,
+		&TestConnectionRequest{Timestamp: timestamp},
+	)
+	if responseError != nil {
 		return nil, responseError
 	}
 	return response, nil
