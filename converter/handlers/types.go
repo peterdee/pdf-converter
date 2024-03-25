@@ -40,3 +40,7 @@ type QueueFileResult struct {
 	Status      string
 	UID         string
 }
+
+type TestConnectionResult struct {
+	Timestamp int64
+}

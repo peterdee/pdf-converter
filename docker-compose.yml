@@ -3,18 +3,26 @@ version: '3.8'
 services:
   api:
     build:
-      context: .
-      dockerfile: ./api-interface/Dockerfile
+      context: ./api-interface
+      dockerfile: Dockerfile
+    env_file:
+      - ./api-interface/.env
     depends_on: 
       - converter
     networks:
       - backend
+    ports:
+      - 8000:8000
   converter:
     build:
-      context: .
-      dockerfile: ./converter/Dockerfile
+      context: ./converter
+      dockerfile: Dockerfile
+    env_file:
+      - ./converter/.env
     networks:
       - backend
+    ports:
+      - 50051:50051
 
 networks:
   backend:
