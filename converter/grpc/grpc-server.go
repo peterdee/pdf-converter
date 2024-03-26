@@ -92,6 +92,16 @@ func (s *server) QueueFile(
 	return &response, nil
 }
 
+func (s *server) TestConnection(
+	ctx context.Context,
+	in *TestConnectionRequest,
+) (*TestConnectionResponse, error) {
+	testConnectionResult := handlers.TestConnection(in.Timestamp)
+	return &TestConnectionResponse{
+		Timestamp: testConnectionResult.Timestamp,
+	}, nil
+}
+
 func CreateServer(tcpServer net.Listener) {
 	maxBodyLimit := constants.MAX_BODY_LIMIT_MB
 	maxBodyLimitString := os.Getenv(constants.ENV_NAMES.MaxBodyLimitMB)

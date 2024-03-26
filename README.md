@@ -22,6 +22,19 @@ gvm use 1.22.0
 
 Additional deployment and launching instructions are available in [api-interface/README.md](./api-interface/README.md) and [converter/README.md](./converter/README.md)
 
+### Launch everything with Docker Compose
+
+Everything can be launched with Docker Compose ([docker-compose.yml](./docker-compose.yml))
+
+Create `.env` files for `api-interface` and `converter` microservices before the launch
+
+
+```shell script
+docker compose up
+```
+
+`api-interface` application will be available at http://localhost:8000
+
 ### License
 
 [MIT](./LICENSE.md)

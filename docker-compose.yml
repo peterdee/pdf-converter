@@ -7,6 +7,9 @@ services:
       dockerfile: Dockerfile
     env_file:
       - ./api-interface/.env
+    environment:
+      - GRPC_ADDRESS=converter:50051
+      - PORT=8000
     depends_on: 
       - converter
     networks:
@@ -19,10 +22,14 @@ services:
       dockerfile: Dockerfile
     env_file:
       - ./converter/.env
+    environment:
+      - PORT=50051
     networks:
       - backend
     ports:
       - 50051:50051
+    restart: on-failure
 
 networks:
   backend:
+    driver: bridge
