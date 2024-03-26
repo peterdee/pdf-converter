@@ -30,15 +30,15 @@ func main() {
 	}
 
 	grpc_client.CreateRPCConnection()
-	for i := 0; i < 5; i += 1 {
+	for i := 0; i <= 5; i += 1 {
 		timestamp := gohelpers.MakeTimestamp()
 		_, testError := grpc_client.TestConnection(timestamp)
 		if testError != nil {
-			log.Printf("Could not connect to RPC, retrying in %d sec", i)
-			time.Sleep(time.Second * time.Duration(i))
-		}
-		if i == 4 {
-			log.Fatal(constants.ERROR_MESSAGES.CouldNotConnectToRPC)
+			if i == 5 {
+				log.Fatal(constants.ERROR_MESSAGES.CouldNotConnectToRPC)
+			}
+			log.Printf("Could not connect to RPC, retrying in %d sec", i+1)
+			time.Sleep(time.Second * time.Duration(i+1))
 		}
 	}
 
