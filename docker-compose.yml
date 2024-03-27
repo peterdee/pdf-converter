@@ -5,6 +5,7 @@ services:
     build:
       context: ./api-interface
       dockerfile: Dockerfile
+    container_name: api
     env_file:
       - ./api-interface/.env
     environment:
@@ -16,10 +17,12 @@ services:
       - backend
     ports:
       - 8000:8000
+
   converter:
     build:
       context: ./converter
       dockerfile: Dockerfile
+    container_name: converter
     env_file:
       - ./converter/.env
     environment:

@@ -1,6 +1,8 @@
 package queue
 
 import (
+	"strings"
+
 	"github.com/gofiber/fiber/v3"
 
 	"api-interface/constants"
@@ -19,7 +21,7 @@ func GetInfoController(context fiber.Ctx) error {
 
 	info, infoError := grpc_client.GetInfo(uid)
 	if infoError != nil {
-		if infoError.Error() == "invalid UID" {
+		if strings.Contains(infoError.Error(), "INVALID_UID") {
 			return fiber.NewError(fiber.StatusBadRequest, constants.RESPONSE_MESSAGES.InvalidUID)
 		}
 		return fiber.NewError(fiber.StatusInternalServerError)
