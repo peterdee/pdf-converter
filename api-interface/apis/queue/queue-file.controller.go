@@ -50,10 +50,10 @@ func QueueFileController(context fiber.Ctx) error {
 	return utilities.Response(utilities.ResponseOptions{
 		Context: context,
 		Data: fiber.Map{
-			"fileName":   &response.Filename,
-			"queueCount": &response.Count,
-			"status":     &response.Status,
-			"uid":        &response.Uid,
+			"fileName":      &response.Filename,
+			"queuePosition": &response.Count,
+			"status":        &response.Status,
+			"uid":           &response.Uid,
 		},
 	})
 }

@@ -37,12 +37,8 @@ message GetInfoRequest {
 }
 
 message GetInfoResponse {
-  int64 count = 1;
-  int64 downloadedAt = 2;
-  string filename = 3;
-  string status = 4;
-  int64 totalDownloads = 5;
-  string uid = 6;
+  string json = 1;
+  int64 queuePosition = 2;
 }
 
 message GetQueueRequest {

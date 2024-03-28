@@ -1,6 +1,7 @@
 package queue
 
 import (
+	"encoding/json"
 	"strings"
 
 	"github.com/gofiber/fiber/v3"
@@ -27,15 +28,24 @@ func GetInfoController(context fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError)
 	}
 
+	var entry QueueEntry
+	parsingError := json.Unmarshal([]byte(info.Json), &entry)
+	if parsingError != nil {
+		return fiber.NewError(fiber.StatusInternalServerError)
+	}
+
 	return utilities.Response(utilities.ResponseOptions{
 		Context: context,
 		Data: fiber.Map{
-			"downloadedAt":   &info.DownloadedAt,
-			"filename":       &info.Filename,
-			"queueCount":     &info.Count,
-			"status":         &info.Status,
-			"totalDownloads": &info.TotalDownloads,
-			"uid":            &info.Uid,
+			"createdAt":        entry.CreatedAt,
+			"downloadedAt":     entry.DownloadedAt,
+			"id":               entry.ID,
+			"originalFileName": entry.OriginalFileName,
+			"queuePosition":    info.QueuePosition,
+			"status":           entry.Status,
+			"totalDownloads":   entry.TotalDownloads,
+			"uid":              entry.UID,
+			"updatedAt":        entry.UpdatedAt,
 		},
 	})
 }

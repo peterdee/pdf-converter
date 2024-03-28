@@ -22,7 +22,7 @@ Response:
 {
   "data": {
     "fileName": "filename.pdf",
-    "queueCount": 1,
+    "queuePosition": 1,
     "status": "queued",
     "uid": "<uid>"
   },
@@ -51,9 +51,47 @@ Response:
 
 ```json
 {
+  "data": {
+    "items": [
+      {
+        "createdAt": 1709641275824,
+        "downloadedAt": 0,
+        "id": "65e70e3b43c77e4c31a0aa7f",
+        "originalFileName": "resume.pdf",
+        "status": "processed",
+        "totalDownloads": 0,
+        "uid": "6aeff35982fbe2752312bb67284b5a34",
+        "updatedAt": 1709641321114
+      },
+      {
+        "createdAt": 1709641285065,
+        "downloadedAt": 0,
+        "id": "65e70e4543c77e4c31a0aa80",
+        "originalFileName": "resume.pdf",
+        "status": "processed",
+        "totalDownloads": 0,
+        "uid": "1deaa3907d8e361440e062c631b8e36d",
+        "updatedAt": 1709641381214
+      },
+      {
+        "createdAt": 1709641329083,
+        "downloadedAt": 0,
+        "id": "65e70e7143c77e4c31a0aa81",
+        "originalFileName": "resume.pdf",
+        "status": "processed",
+        "totalDownloads": 0,
+        "uid": "38fe7cbef957b249a0c9f36e49b70f2b",
+        "updatedAt": 1709641441089
+      },
+    ],
+    "limit": 10,
+    "page": 1,
+    "totalItems": 3,
+    "totalPages": 1
+  },
   "datetime": 1710011577018,
   "info": "OK",
-  "request": "/api/queue/<uid> [DELETE]",
+  "request": "/api/queue?limit=10&page=1 [GET]",
   "status": 200
 }
 ```
@@ -82,10 +120,15 @@ Response:
 ```json
 {
   "data": {
-    "filename": "filename.pdf",
-    "queueCount": 0,
-    "status": "processed",
-    "uid": "<uid>"
+			"createdAt": 1710011841999,
+			"downloadedAt": 1710011841999,
+			"id": "65e70e3b43c77e4c31a0aa7f",
+			"originalFileName": "filename.pdf",
+			"queuePosition": 1,
+			"status": "queued",
+			"totalDownloads": 0,
+			"uid": "<uid>",
+			"updatedAt": 1710011841999,
   },
   "datetime": 1710011841999,
   "info": "OK",
