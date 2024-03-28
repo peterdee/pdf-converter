@@ -53,15 +53,10 @@ func (s *server) GetInfo(
 	if getInfoError != nil {
 		return nil, getInfoError
 	}
-	response := GetInfoResponse{
-		Count:          getInfoResult.QueuedItems,
-		DownloadedAt:   getInfoResult.DownloadedAt,
-		Filename:       getInfoResult.Filename,
-		Status:         getInfoResult.Status,
-		TotalDownloads: int64(getInfoResult.TotalDownloads),
-		Uid:            getInfoResult.UID,
-	}
-	return &response, nil
+	return &GetInfoResponse{
+		Json:          getInfoResult.JSON,
+		QueuePosition: getInfoResult.QueuePosition,
+	}, nil
 }
 
 func (s *server) GetQueue(

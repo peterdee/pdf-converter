@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"time"
 
@@ -56,15 +57,15 @@ func GetInfo(uid string) (*GetInfoResult, error) {
 				queuedEntries = count
 			}
 
-			response := &GetInfoResult{
-				DownloadedAt:   queueEntry.DownloadedAt,
-				Filename:       queueEntry.OriginalFileName,
-				QueuedItems:    queuedEntries,
-				Status:         queueEntry.Status,
-				TotalDownloads: queueEntry.TotalDownloads,
-				UID:            uid,
+			jsonData, jsonError := json.Marshal(queueEntry)
+			if jsonError != nil {
+				return nil, jsonError
 			}
-			return response, nil
+
+			return &GetInfoResult{
+				JSON:          string(jsonData),
+				QueuePosition: queuedEntries,
+			}, nil
 		},
 		options.Transaction().SetWriteConcern(writeconcern.Majority()),
 	)

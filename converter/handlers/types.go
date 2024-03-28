@@ -14,12 +14,8 @@ type DownloadArchiveResult struct {
 }
 
 type GetInfoResult struct {
-	DownloadedAt   int64
-	Filename       string
-	QueuedItems    int64
-	Status         string
-	TotalDownloads int
-	UID            string
+	JSON          string
+	QueuePosition int64
 }
 
 type GetQueueJSON struct {
